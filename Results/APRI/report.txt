@@ -1,0 +1,69 @@
+=== 4-klasowa klasyfikacja ===
+Confusion matrix:
+ [[114  17  12  14]
+ [ 23   2   9   7]
+ [  9  11   5  10]
+ [ 16   6  13  57]]
+              precision    recall  f1-score   support
+
+          F1       0.70      0.73      0.71       157
+          F2       0.06      0.05      0.05        41
+          F3       0.13      0.14      0.14        35
+          F4       0.65      0.62      0.63        92
+
+    accuracy                           0.55       325
+   macro avg       0.38      0.38      0.38       325
+weighted avg       0.54      0.55      0.55       325
+
+
+=== Binarna klasyfikacja ===
+Confusion matrix:
+ [[156  42]
+ [ 42  85]]
+              precision    recall  f1-score   support
+
+  F1–2 (low)       0.79      0.79      0.79       198
+ F3–4 (high)       0.67      0.67      0.67       127
+
+    accuracy                           0.74       325
+   macro avg       0.73      0.73      0.73       325
+weighted avg       0.74      0.74      0.74       325
+
+AUC: 0.808
+
+
+=== HVC ===
+
+
+=== 4-klasowa klasyfikacja ===
+Confusion matrix:
+ [[52 13  8 10]
+ [12  2  4  5]
+ [ 5  9  5  6]
+ [12  3 10 40]]
+              precision    recall  f1-score   support
+
+          F1       0.64      0.63      0.63        83
+          F2       0.07      0.09      0.08        23
+          F3       0.19      0.20      0.19        25
+          F4       0.66      0.62      0.63        65
+
+    accuracy                           0.51       196
+   macro avg       0.39      0.38      0.39       196
+weighted avg       0.52      0.51      0.51       196
+
+
+=== Binarna klasyfikacja ===
+Confusion matrix:
+ [[79 27]
+ [29 61]]
+              precision    recall  f1-score   support
+
+  F1–2 (low)       0.73      0.75      0.74       106
+ F3–4 (high)       0.69      0.68      0.69        90
+
+    accuracy                           0.71       196
+   macro avg       0.71      0.71      0.71       196
+weighted avg       0.71      0.71      0.71       196
+
+AUC: 0.774

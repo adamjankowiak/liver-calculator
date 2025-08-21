@@ -1,0 +1,30 @@
+=== 3-klasowa klasyfikacja===
+Confusion matrix:
+ [[141  15   1]
+ [ 58  18   0]
+ [ 23  43  26]]
+              precision    recall  f1-score   support
+
+          F1       0.64      0.90      0.74       157
+       F2-F3       0.24      0.24      0.24        76
+          F4       0.96      0.28      0.44        92
+
+    accuracy                           0.57       325
+   macro avg       0.61      0.47      0.47       325
+weighted avg       0.63      0.57      0.54       325
+
+
+=== Binarna klasyfikacja===
+Confusion matrix:
+ [[141  16]
+ [ 81  87]]
+              precision    recall  f1-score   support
+
+          F1       0.64      0.90      0.74       157
+       F2-F4       0.84      0.52      0.64       168
+
+    accuracy                           0.70       325
+   macro avg       0.74      0.71      0.69       325
+weighted avg       0.74      0.70      0.69       325
+
+AUC: 0.788
