@@ -60,5 +60,5 @@ def run_binary(path_csv):
     evaluate_binary(filtered_age)
 
 if __name__ == "__main__":
-    run_3_class("Data//FIB4//Fscore-No-Cat-Imp-3-Class-FIB4.csv")
-    run_binary("Data//FIB4//Fscore-No-Cat-Imp-FIB4.csv")
+    run_3_class("Data/FIB4/Fscore-No-Cat-Imp-3-Class-FIB4.csv")
+    run_binary("Data/FIB4/Fscore-No-Cat-Imp-FIB4.csv")
