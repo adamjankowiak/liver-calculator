@@ -28,7 +28,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.base import clone
 from sklearn.isotonic import IsotonicRegression
 
-# XGBoost (optional). If unavailable, the ensemble uses GB+RF.
 try:
     from xgboost import XGBClassifier
     HAS_XGB = True
@@ -82,7 +81,7 @@ class LiverFibrosisMetaCalculatorF2plusDual:
         target_npv_low=0.95,                # rule-out NPV target
         target_specificity_high=0.80,       # rule-in (specificity) target
         beta_low=2.0,                       # F-beta fallback for T_low
-        weight_grid=(5, 10, 15),            # positive-class weights (≥F2)
+        weight_grid=(1,2,3,4,5,6,7,8,9, 10,15,20,25,30),            # positive-class weights (≥F2)
         n_splits_oof=5,
         random_state=42,
         min_ruleout_frac=0.10,              # minimum fraction sent to RULE_OUT (e.g., ≥10%)
@@ -516,7 +515,7 @@ class LiverFibrosisMetaCalculatorF2plusDual:
             # (jeśli nie używasz constrained_layout: odkomentuj następne dwie linie)
             # fig.tight_layout()
             # fig.canvas.draw()  # upewnia rozmieszczenie textów przed zapisem
-            fig.savefig('F1_F2.png', dpi=400, bbox_inches='tight')
+            fig.savefig('F1_F2_reduced_iterative.png', dpi=400, bbox_inches='tight')
             plt.show()
 
         return out
@@ -556,9 +555,9 @@ def main_pipeline(csv_path, do_plots=True):
         target_npv_low=0.95,
         target_specificity_high=0.80,
         beta_low=2.0,
-        weight_grid=(5, 10, 15),
+        weight_grid=(1,2,3,4,5,6,7,8,9, 10,15, 20,25,30),
         n_splits_oof=5,
-        random_state=42,
+        random_state=41,
         min_ruleout_frac=0.10,
         min_rulein_frac=0.05,
         ensemble_weights=(0.5, 0.35, 0.15),
@@ -589,7 +588,7 @@ def main_pipeline(csv_path, do_plots=True):
 
 if __name__ == "__main__":
     # Path to CSV with FSCORE ∈ {1,2,3,4}
-    csv_path = "YOUR_PATH_HERE.csv"
+    csv_path = "Data/Modified/Full/Final/Reduced-Imp-Iterative.csv"
     calculator, metrics = main_pipeline(csv_path, do_plots=True)
 
     print("\n" + "="*60)
