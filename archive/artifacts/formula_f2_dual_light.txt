@@ -1,0 +1,12 @@
+Closed-form meta-calculator (distilled from ensemble):
+logit(p) = 0.319591
+           + (+0.476977) * APRI
+           + (+0.380638) * FIB4
+           + (-0.605056) * RITIS
+           + (+0.234801) * NAFLD
+           + (-2.094596) * apri_x_fib4
+           + (+1.286686) * apri_x_ritis
+p = 1 / (1 + exp(-logit(p)))
+Score_0-10 = 10 * p
+T_low  (prob) = 0.333333  |  T_low (score) = 3.33
+T_high (prob) = 0.500000 |  T_high (score) = 5.00

@@ -1,0 +1,147 @@
+=== APRI: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      261
+Liczba w gray zone:           75 (28.7%)
+Liczba użyta do ewaluacji:    186 (71.3%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.84      0.97      0.90       129
+       F3-F4       0.89      0.58      0.70        57
+
+    accuracy                           0.85       186
+   macro avg       0.87      0.77      0.80       186
+weighted avg       0.86      0.85      0.84       186
+
+Macro-F1:              0.801
+Weighted-F1:           0.839
+Cohen's kappa:         0.607
+Weighted kappa (quad): 0.607
+
+Per-class metrics:
+Klasa 1-2:
+  TP=125, FP=24, TN=33, FN=4
+  Sensitivity (recall): 0.969
+  Specificity:          0.579
+  PPV (precision):      0.839
+  NPV:                  0.892
+  F1:                   0.899
+
+Klasa 3-4:
+  TP=33, FP=4, TN=125, FN=24
+  Sensitivity (recall): 0.579
+  Specificity:          0.969
+  PPV (precision):      0.892
+  NPV:                  0.839
+  F1:                   0.702
+
+=== FIB-4: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      261
+Liczba w gray zone:           74 (28.4%)
+Liczba użyta do ewaluacji:    187 (71.6%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.92      0.95      0.94       129
+       F3-F4       0.89      0.81      0.85        58
+
+    accuracy                           0.91       187
+   macro avg       0.90      0.88      0.89       187
+weighted avg       0.91      0.91      0.91       187
+
+Macro-F1:              0.891
+Weighted-F1:           0.908
+Cohen's kappa:         0.782
+Weighted kappa (quad): 0.782
+
+Per-class metrics:
+Klasa 1-2:
+  TP=123, FP=11, TN=47, FN=6
+  Sensitivity (recall): 0.953
+  Specificity:          0.810
+  PPV (precision):      0.918
+  NPV:                  0.887
+  F1:                   0.935
+
+Klasa 3-4:
+  TP=47, FP=6, TN=123, FN=11
+  Sensitivity (recall): 0.810
+  Specificity:          0.953
+  PPV (precision):      0.887
+  NPV:                  0.918
+  F1:                   0.847
+
+=== NAFLD: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      261
+Liczba w gray zone:           54 (20.7%)
+Liczba użyta do ewaluacji:    207 (79.3%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.79      0.99      0.88       150
+       F3-F4       0.95      0.32      0.47        57
+
+    accuracy                           0.81       207
+   macro avg       0.87      0.65      0.68       207
+weighted avg       0.84      0.81      0.77       207
+
+Macro-F1:              0.678
+Weighted-F1:           0.769
+Cohen's kappa:         0.390
+Weighted kappa (quad): 0.390
+
+Per-class metrics:
+Klasa 1-2:
+  TP=149, FP=39, TN=18, FN=1
+  Sensitivity (recall): 0.993
+  Specificity:          0.316
+  PPV (precision):      0.793
+  NPV:                  0.947
+  F1:                   0.882
+
+Klasa 3-4:
+  TP=18, FP=1, TN=149, FN=39
+  Sensitivity (recall): 0.316
+  Specificity:          0.993
+  PPV (precision):      0.947
+  NPV:                  0.793
+  F1:                   0.474
+
+=== de Ritis: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      261
+Liczba w gray zone:           0 (0.0%)
+Liczba użyta do ewaluacji:    261 (100.0%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.66      0.96      0.78       164
+       F3-F4       0.70      0.14      0.24        97
+
+    accuracy                           0.66       261
+   macro avg       0.68      0.55      0.51       261
+weighted avg       0.67      0.66      0.58       261
+
+Macro-F1:              0.510
+Weighted-F1:           0.579
+Cohen's kappa:         0.129
+Weighted kappa (quad): 0.129
+
+Per-class metrics:
+Klasa 1-2:
+  TP=158, FP=83, TN=14, FN=6
+  Sensitivity (recall): 0.963
+  Specificity:          0.144
+  PPV (precision):      0.656
+  NPV:                  0.700
+  F1:                   0.780
+
+Klasa 3-4:
+  TP=14, FP=6, TN=158, FN=83
+  Sensitivity (recall): 0.144
+  Specificity:          0.963
+  PPV (precision):      0.700
+  NPV:                  0.656
+  F1:                   0.239

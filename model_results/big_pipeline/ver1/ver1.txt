@@ -1,0 +1,54 @@
+
+============================================================
+META-KALKULATOR HEPATOLOGICZNY (Dual thresholds)
+Cel: Wykrycie FSCORE 3-4 z wysoką czułością i kontrolą swoistości
+============================================================
+
+1. Wczytywanie danych...
+   Wczytano 325 rekordów
+
+2. Przygotowanie danych...
+   Unikalne wartości FSCORE: ['3-4' '1-2']
+   Mapowanie: '1-2' → 0 (zdrowy), '3-4' → 1 (chory)
+   Pacjenci z FSCORE 1-2: 198 (60.9%)
+   Pacjenci z FSCORE 3-4: 127 (39.1%)
+
+3. Podział na zbiory treningowy i testowy...
+   Zbiór treningowy: 243 próbek
+   Zbiór testowy: 82 próbek
+
+4. Trenowanie i wybór konfiguracji...
+
+=== WYBÓR KONFIGURACJI ===
+  Wybrana waga klasy 1: 15
+  Wybrana kalibracja:   sigmoid
+  OOF PR-AUC:           0.7755
+  OOF Brier:            0.3234
+  OOF ECE(10):          0.3900
+  T_low (rec≥0.98):  None  (cutoff None)
+  T_high (spec≥0.8): 0.8898761988915135 (cutoff 8.9)
+   ✓ Model wytrenowany i skalibrowany
+
+5. Ewaluacja na zbiorze testowym:
+
+============================================================
+WYNIKI META-KALKULATORA HEPATOLOGICZNEGO (Dual thresholds)
+============================================================
+AUC-ROC: 0.8475 | PR-AUC: 0.8233 | Brier: 0.3400 | ECE(10): 0.4052
+T_low  (rule-out, recall≥0.98): None  (cutoff None)
+T_high (rule-in,  spec≥0.8): 0.8898761988915135 (cutoff 8.9)
+  → recall=0.781 | spec=0.700 | prec=0.625 | F1=0.694
+Triage: rule-out=0 | gray=42 | rule-in=40
+
+6. Zapisywanie modelu...
+   ✓ Model zapisany jako 'liver_fibrosis_meta_calculator.pkl'
+
+============================================================
+PODSUMOWANIE
+============================================================
+✓ Wybrana kalibracja: sigmoid
+✓ Wybrana waga klasy 1: 15
+✓ T_low (rule-out):  None  (cutoff None)
+✓ T_high (rule-in): 0.8898761988915135 (cutoff 8.9)
+✓ Test AUC: 0.8475 | PR-AUC: 0.8233
+✓ Test Brier: 0.3400 | ECE(10): 0.4052

@@ -1,0 +1,32 @@
+===PODSTAWOWE LASY LOSOWE - TYLKO KALKULATORY JAKO ATRYBUTY===
+
+Najlepsze parametry: {'bootstrap': True, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
+Najlepszy wynik CV (średni): 0.8287906390663272
+
+Classification report:
+              precision    recall  f1-score   support
+
+         1-2       0.90      0.90      0.90        21
+         3-4       0.75      0.75      0.75         8
+
+    accuracy                           0.86        29
+   macro avg       0.83      0.83      0.83        29
+weighted avg       0.86      0.86      0.86        29
+
+Confusion matrix:
+ [[19  2]
+ [ 2  6]]
+
+Dodatkowe metryki (pozytywna klasa = '3-4'):
+  Recall / Sensitivity (TPR): 0.7500
+  Specificity (TNR):          0.9048
+  PPV (Precision):            0.7500
+  NPV:                        0.9048
+  Counts (tn, fp, fn, tp):    19, 2, 2, 6
+
+Feature importances:
+FIB4     0.420468
+NAFLD    0.301265
+APRI     0.192751
+RITIS    0.085516
+dtype: float64

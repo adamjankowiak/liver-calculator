@@ -1,0 +1,16 @@
+Closed-form meta-calculator (distilled from ensemble):
+logit(p) = 4.128208
+           + (+0.564175) * max_score
+           + (+9.800297) * APRI
+           + (+2.319844) * FIB4
+           + (-53.122213) * weighted_sum
+           + (+0.963695) * apri_x_ritis
+           + (+2.094835) * RITIS
+           + (-2.060535) * apri_x_fib4
+           + (+0.270178) * min_score
+           + (-1.529775) * std_score
+           + (+1.735821) * fib4_x_nafld
+p = 1 / (1 + exp(-logit(p)))
+Score_0-10 = 10 * p
+T_low  (prob) = 0.333333  |  T_low (score) = 3.33
+T_high (prob) = 0.500000 |  T_high (score) = 5.00

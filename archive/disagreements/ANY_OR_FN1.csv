@@ -1,0 +1,7 @@
+l.p.,Age,Virus,Diabex,Hemoglobin [g/dl],PLT [k/µl],ALT [U/l],AST [U/l],GGTP [U/l],INR,Albumin [g/l],Albumin [%],Phosphatase alkaline [U/l],Bilirubin [µmol/l],STEATOSIS [dB/m],FIBROSIS [kPa],FSCORE,APRI,FIB4,RITIS,BMI,NAFLD,pred_FIB4,pred_APRI,pred_NAFLD,pred_RITIS,pred_ANY_OR,alarms_count,alarms_list,margin_FIB4,margin_APRI,margin_NAFLD,margin_RITIS,y_true_F3F4,y_pred_F3F4
+357.0,43.0,0.0,0,14.8,202.0,35.0,24.0,30.0,1.2,45.06,56.39,80.0,8.4,269.0,10.1,3-4,0.238,0.86,0.69,20,-3.125,False,False,False,False,False,0,,-0.59,-0.26,-1.67,-0.31,True,False
+161.0,65.0,4.0,1,16.0,232.0,36.8,24.3,55.1,1.25,43.09,54.07,68.6,9.6,332.0,22.6,3-4,0.209,1.12,0.66,20,-1.466,False,False,False,False,False,0,,-0.33,-0.29,-0.01,-0.34,True,False
+473.0,35.0,4.0,0,15.4,248.0,91.0,34.0,97.0,1.3,44.92,55.87,106.0,8.7,278.0,14.6,3-4,0.274,0.5,0.37,20,-4.319,False,False,False,False,False,0,,-0.95,-0.23,-2.86,-0.63,True,False
+271.0,23.0,0.0,0,15.2,320.0,37.6,31.6,132.9,1.08,47.6,56.47,87.2,12.7,341.0,12.2,3-4,0.198,0.37,0.84,20,-5.414,False,False,False,False,False,0,,-1.08,-0.3,-3.96,-0.16,True,False
+182.0,30.0,4.0,0,16.3,263.0,99.0,64.94,84.36,1.08,50.0,55.59,85.84,7.1,187.0,10.3,3-4,0.494,0.74,0.66,20,-4.755,False,False,False,False,False,0,,-0.71,-0.01,-3.3,-0.34,True,False
+227.0,40.0,4.0,0,7.93,347.0,41.0,23.37,21.48,0.91,50.0,56.14,79.77,4.3,0.0,10.5,3-4,0.135,0.42,0.57,20,-5.562,False,False,False,False,False,0,,-1.03,-0.36,-4.11,-0.43,True,False

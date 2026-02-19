@@ -1,0 +1,35 @@
+FINAL TRIAGE REPORT (triage-tuned best params)
+============================================================
+Best params: {'bootstrap': True, 'class_weight': 'balanced', 'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 5, 'min_samples_split': 2, 'n_estimators': 200, 'n_jobs': -1, 'random_state': 42}
+Calibration method: sigmoid, CalCV: 5
+Targets: Sens>= 0.95, Spec>= 0.85
+
+Thresholds learned from TRAIN (OOF):
+t_out=0.103984848902275, t_in=0.5269415530821
+
+=== TRAIN (OOF) TRIAGE REPORT (triage-tuned best params) ===
+t_out=0.1040, t_in=0.5269
+Coverage OUT/IN/GREY: 23.6% / 38.7% / 37.7%
+Rule-out safety: NPV_out=0.9275, FN_rate_out=0.0725
+Rule-in certainty: PPV_in=0.7699, FP_rate_in=0.2301
+Constraints check: sens@t_out=0.9565 (>= 0.95), spec@t_in=0.8531 (>= 0.85)
+Triage score (min grey): 0.3767
+Triage score (utility):  1.1644
+
+=== TRAIN (FINAL model, in-sample) TRIAGE REPORT (diagnostic) ===
+t_out=0.1040, t_in=0.5269
+Coverage OUT/IN/GREY: 30.5% / 37.0% / 32.5%
+Rule-out safety: NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty: PPV_in=0.8889, FP_rate_in=0.1111
+Constraints check: sens@t_out=1.0000 (>= 0.95), spec@t_in=0.9322 (>= 0.85)
+Triage score (min grey): 0.3253
+Triage score (utility):  0.5308
+
+=== TEST TRIAGE REPORT (triage-tuned best params) ===
+t_out=0.1040, t_in=0.5269
+Coverage OUT/IN/GREY: 37.9% / 24.1% / 37.9%
+Rule-out safety: NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty: PPV_in=0.8571, FP_rate_in=0.1429
+Constraints check: sens@t_out=1.0000 (>= 0.95), spec@t_in=0.9524 (>= 0.85)
+Triage score (min grey): 0.3793
+Triage score (utility):  0.5517

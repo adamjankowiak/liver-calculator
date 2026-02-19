@@ -1,0 +1,45 @@
+=== 3-klasowa klasyfikacja===
+Confusion matrix:
+ [[147   7   3]
+ [ 71   3   2]
+ [ 66  12  14]]
+              precision    recall  f1-score   support
+
+          F1       0.52      0.94      0.67       157
+       F2-F3       0.14      0.04      0.06        76
+          F4       0.74      0.15      0.25        92
+
+    accuracy                           0.50       325
+   macro avg       0.46      0.38      0.33       325
+weighted avg       0.49      0.50      0.41       325
+
+
+Macro-F1:              0.327
+Weighted-F1:           0.408
+Cohen's kappa:         0.092
+Weighted kappa (quad): 0.175
+
+Per-class metrics (one-vs-rest):
+Klasa 1:
+  TP=147, FP=137, TN=31, FN=10
+  Sensitivity (recall): 0.936
+  Specificity:          0.185
+  PPV (precision):      0.518
+  NPV:                  0.756
+  F1:                   0.667
+
+Klasa 2-3:
+  TP=3, FP=19, TN=230, FN=73
+  Sensitivity (recall): 0.039
+  Specificity:          0.924
+  PPV (precision):      0.136
+  NPV:                  0.759
+  F1:                   0.061
+
+Klasa 4:
+  TP=14, FP=5, TN=228, FN=78
+  Sensitivity (recall): 0.152
+  Specificity:          0.979
+  PPV (precision):      0.737
+  NPV:                  0.745
+  F1:                   0.252

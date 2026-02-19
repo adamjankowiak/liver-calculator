@@ -1,0 +1,37 @@
+===PODSTAWOWE LASY LOSOWE - DODATKOWE CECHY===
+
+Najlepsze parametry: {'bootstrap': True, 'class_weight': 'balanced', 'max_depth': 4, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 100}
+Najlepszy wynik CV (średni): 0.8329813064052874
+
+Classification report:
+              precision    recall  f1-score   support
+
+         1-2       0.95      0.95      0.95        21
+         3-4       0.88      0.88      0.88         8
+
+    accuracy                           0.93        29
+   macro avg       0.91      0.91      0.91        29
+weighted avg       0.93      0.93      0.93        29
+
+Confusion matrix:
+ [[20  1]
+ [ 1  7]]
+
+Dodatkowe metryki (pozytywna klasa = '3-4'):
+  Recall / Sensitivity (TPR): 0.8750
+  Specificity (TNR):          0.9524
+  PPV (Precision):            0.8750
+  NPV:                        0.9524
+  Counts (tn, fp, fn, tp):    20, 1, 1, 7
+
+Feature importances:
+FIB4             0.274140
+NAFLD            0.246349
+APRI             0.135970
+PLT [k/µl]       0.105151
+Albumin [g/l]    0.078014
+AST [U/l]        0.063863
+Age              0.038370
+ALT [U/l]        0.033801
+RITIS            0.024343
+dtype: float64

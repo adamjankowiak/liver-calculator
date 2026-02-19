@@ -1,0 +1,49 @@
+
+============================================================
+META-KALKULATOR HEPATOLOGICZNY (Single threshold: rule-in, Ensemble)
+Cel: Wykrycie FSCORE 3-4 z kontrolą swoistości (T_high)
+============================================================
+
+1. Wczytywanie danych...
+   Wczytano 325 rekordów
+
+2. Przygotowanie danych...
+   Unikalne wartości FSCORE: ['3-4' '1-2']
+   Mapowanie: '1-2' → 0 (zdrowy), '3-4' → 1 (chory)
+   Pacjenci z FSCORE 1-2: 198 (60.9%)
+   Pacjenci z FSCORE 3-4: 127 (39.1%)
+
+3. Podział na zbiory treningowy i testowy...
+   Zbiór treningowy: 243 próbek
+   Zbiór testowy:    82 próbek
+
+4. Trenowanie i wybór konfiguracji...
+
+=== WYBÓR KONFIGURACJI (tryb single-threshold / rule-in) ===
+  Waga klasy 1: 15
+  Kalibracja:   isotonic
+  OOF PR-AUC:   0.8133 | Brier: 0.3212 | ECE(10): 0.3708
+  T_high (spec≥0.8): 0.8954452942491432 (cutoff 8.95)
+   ✓ Model wytrenowany i skalibrowany
+
+5. Ewaluacja na zbiorze testowym:
+
+============================================================
+WYNIKI (single-threshold / rule-in)
+============================================================
+AUC-ROC: 0.8944 | PR-AUC: 0.8462 | Brier: 0.3109 | ECE(10): 0.3891
+T_high: 0.8954452942491432 (cutoff 8.95)
+  → recall=0.906 | specificity=0.760 | precision=0.707 | F1=0.795
+Triage: gray=41 | rule-in=41
+
+6. Zapisywanie modelu...
+   ✓ Zapisano: 'liver_fibrosis_meta_calculator.pkl'
+
+============================================================
+PODSUMOWANIE
+============================================================
+✓ Kalibracja: isotonic
+✓ Waga klasy 1: 15
+✓ T_high: 0.8954452942491432 (cutoff 8.95)
+✓ Test AUC: 0.8944 | PR-AUC: 0.8462
+✓ Test Brier: 0.3109 | ECE(10): 0.3891

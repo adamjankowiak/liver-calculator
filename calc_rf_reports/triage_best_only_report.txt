@@ -1,0 +1,65 @@
+FAST TRIAGE REPORT (best params only)
+================================================================================
+Best params: {'bootstrap': True, 'class_weight': 'balanced', 'max_depth': 4, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 100, 'n_jobs': -1, 'random_state': 42}
+Calibration method: sigmoid, CalCV: 5
+Targets: Sens>= 0.95, Spec>= 0.85
+
+Thresholds learned from TRAIN (OOF):
+t_out=0.109033, t_in=0.469305
+
+=== TRAIN (OOF) TRIAGE REPORT ===
+t_out=0.109033, t_in=0.469305
+Coverage rule-out / rule-in / grey zone: 27.1% / 39.7% / 33.2%
+Rule-out safety: NPV_out=0.9367, FN_rate_out=0.0633
+Rule-in certainty: PPV_in=0.7759, FP_rate_in=0.2241
+Constraints check: sens@t_out=0.9565 (>= 0.95), spec@t_in=0.8531 (>= 0.85)
+
+=== TRAIN (FINAL model, in-sample) TRIAGE REPORT (diagnostic) ===
+t_out=0.109033, t_in=0.469305
+Coverage rule-out / rule-in / grey zone: 30.8% / 39.7% / 29.5%
+Rule-out safety: NPV_out=0.9889, FN_rate_out=0.0111
+Rule-in certainty: PPV_in=0.8534, FP_rate_in=0.1466
+Constraints check: sens@t_out=0.9913 (>= 0.95), spec@t_in=0.9040 (>= 0.85)
+
+=== TEST TRIAGE REPORT (external) ===
+t_out=0.109033, t_in=0.469305
+Coverage rule-out / rule-in / grey zone: 31.0% / 24.1% / 44.8%
+Rule-out safety: NPV_out=0.8889, FN_rate_out=0.1111
+Rule-in certainty: PPV_in=0.8571, FP_rate_in=0.1429
+Constraints check: sens@t_out=0.8750 (>= 0.95), spec@t_in=0.9524 (>= 0.85)
+
+================================================================================
+EVALUATION EXCLUDING GREY ZONE (OUT+IN only)
+================================================================================
+
+--- TRAIN (OOF) ---
+Total N: 292
+Grey zone N: 97
+Used for evaluation N (OUT+IN): 195
+
+Classification report (OUT+IN only):
+              precision    recall  f1-score   support
+
+         1-2     0.9367    0.7400    0.8268       100
+         3-4     0.7759    0.9474    0.8531        95
+
+    accuracy                         0.8410       195
+   macro avg     0.8563    0.8437    0.8399       195
+weighted avg     0.8583    0.8410    0.8396       195
+
+
+--- TEST ---
+Total N: 29
+Grey zone N: 13
+Used for evaluation N (OUT+IN): 16
+
+Classification report (OUT+IN only):
+              precision    recall  f1-score   support
+
+         1-2     0.8889    0.8889    0.8889         9
+         3-4     0.8571    0.8571    0.8571         7
+
+    accuracy                         0.8750        16
+   macro avg     0.8730    0.8730    0.8730        16
+weighted avg     0.8750    0.8750    0.8750        16
+

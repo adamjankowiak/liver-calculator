@@ -1,0 +1,44 @@
+{
+  "intercept": 4.128208177206886,
+  "coefficients": {
+    "max_score": 0.5641750172136233,
+    "APRI": 9.800297161495125,
+    "FIB4": 2.319843975588121,
+    "weighted_sum": -53.12221308898228,
+    "apri_x_ritis": 0.9636945999487481,
+    "RITIS": 2.0948350941657345,
+    "apri_x_fib4": -2.0605347500522067,
+    "min_score": 0.2701780742578088,
+    "std_score": -1.5297748212739195,
+    "fib4_x_nafld": 1.7358208448970829
+  },
+  "feature_order": [
+    "max_score",
+    "APRI",
+    "FIB4",
+    "weighted_sum",
+    "apri_x_ritis",
+    "RITIS",
+    "apri_x_fib4",
+    "min_score",
+    "std_score",
+    "fib4_x_nafld"
+  ],
+  "impute_medians": {
+    "max_score": 1.648,
+    "APRI": 0.472,
+    "FIB4": 1.53,
+    "weighted_sum": 0.23309,
+    "apri_x_ritis": 0.07373166666666667,
+    "RITIS": 0.86,
+    "apri_x_fib4": 0.037052,
+    "min_score": -2.326,
+    "std_score": 2.0772140597444455,
+    "fib4_x_nafld": 0.0393355
+  },
+  "formulas": {
+    "logit": "logit(p) = intercept + sum_j coef[j] * x_j",
+    "prob": "p = 1 / (1 + exp(-logit(p)))",
+    "score_0_10": "score = 10 * p"
+  }
+}

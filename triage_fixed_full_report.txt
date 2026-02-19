@@ -1,0 +1,157 @@
+FINAL TRIAGE + CALIBRATION REPORT (fixed params, no grid search)
+==============================================================================
+
+[CONFIG]
+POS_LABEL=3-4, NEG_LABEL=1-2
+Targets: Sens>= 0.95, Spec>= 0.85
+Calibration: method=sigmoid, CalCV=5
+OOF folds for thresholds: 5
+RANDOM_STATE=42
+
+[MODEL PARAMS]
+RF_PARAMS: {'bootstrap': True, 'class_weight': 'balanced', 'max_depth': 4, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 100, 'random_state': 42, 'n_jobs': -1}
+
+[DATA]
+Train n=261, Test n=29
+Prevalence (POS) train=0.3716, test=0.2759
+Features: ['Age', 'PLT [k/µl]', 'AST [U/l]', 'ALT [U/l]', 'Albumin [g/l]', 'FIB4', 'APRI', 'NAFLD', 'RITIS']
+
+[THRESHOLDS learned from TRAIN (OOF)]
+t_out=0.08529323
+t_in =0.41811179
+
+------------------------------------------------------------------------------
+[TRIAGE RESULTS]
+
+=== TRAIN (OOF) TRIAGE REPORT ===
+t_out=0.085293, t_in=0.418112
+Coverage OUT/IN/GREY: 11.5% / 39.5% / 49.0%
+Rule-out safety (OUT): NPV_out=0.8667, FN_rate_out=0.1333
+Rule-in certainty (IN): PPV_in=0.7670, FP_rate_in=0.2330
+Constraint check: sens@t_out=0.9588 (>= 0.95), spec@t_in=0.8537 (>= 0.85)
+
+-- Confusion/Metrics @ t_out (predict POS if p>=t_out) --
+TN=26, FP=138, FN=4, TP=93
+Sens=0.9588, Spec=0.1585, PPV=0.4026, NPV=0.8667
+
+-- Confusion/Metrics @ t_in (predict POS if p>=t_in) --
+TN=140, FP=24, FN=18, TP=79
+Sens=0.8144, Spec=0.8537, PPV=0.7670, NPV=0.8861
+
+-- Subset counts --
+OUT: n=30, TN=26, FN=4
+IN:  n=103, TP=79, FP=24
+GREY:n=128
+
+=== TRAIN (FINAL model, in-sample) TRIAGE REPORT (diagnostic) ===
+t_out=0.085293, t_in=0.418112
+Coverage OUT/IN/GREY: 16.5% / 38.7% / 44.8%
+Rule-out safety (OUT): NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty (IN): PPV_in=0.8317, FP_rate_in=0.1683
+Constraint check: sens@t_out=1.0000 (>= 0.95), spec@t_in=0.8963 (>= 0.85)
+
+-- Confusion/Metrics @ t_out (predict POS if p>=t_out) --
+TN=43, FP=121, FN=0, TP=97
+Sens=1.0000, Spec=0.2622, PPV=0.4450, NPV=1.0000
+
+-- Confusion/Metrics @ t_in (predict POS if p>=t_in) --
+TN=147, FP=17, FN=13, TP=84
+Sens=0.8660, Spec=0.8963, PPV=0.8317, NPV=0.9187
+
+-- Subset counts --
+OUT: n=43, TN=43, FN=0
+IN:  n=101, TP=84, FP=17
+GREY:n=117
+
+=== TEST TRIAGE REPORT ===
+t_out=0.085293, t_in=0.418112
+Coverage OUT/IN/GREY: 3.4% / 34.5% / 62.1%
+Rule-out safety (OUT): NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty (IN): PPV_in=0.7000, FP_rate_in=0.3000
+Constraint check: sens@t_out=1.0000 (>= 0.95), spec@t_in=0.8571 (>= 0.85)
+
+-- Confusion/Metrics @ t_out (predict POS if p>=t_out) --
+TN=1, FP=20, FN=0, TP=8
+Sens=1.0000, Spec=0.0476, PPV=0.2857, NPV=1.0000
+
+-- Confusion/Metrics @ t_in (predict POS if p>=t_in) --
+TN=18, FP=3, FN=1, TP=7
+Sens=0.8750, Spec=0.8571, PPV=0.7000, NPV=0.9474
+
+-- Subset counts --
+OUT: n=1, TN=1, FN=0
+IN:  n=10, TP=7, FP=3
+GREY:n=18
+
+------------------------------------------------------------------------------
+[CALIBRATION RESULTS]
+
+--- TRAIN (OOF) ---
+Brier=0.130071
+LogLoss=0.422971
+ECE(10 bins)=0.055101
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1 58    0.0836   0.1034  0.0199    0.004416
+    0.1      0.2 69    0.1391   0.0725  0.0666    0.017606
+    0.2      0.3 21    0.2421   0.2857  0.0436    0.003505
+    0.3      0.4  8    0.3619   0.1250  0.2369    0.007260
+    0.4      0.5 14    0.4406   0.4286  0.0120    0.000646
+    0.5      0.6 16    0.5597   0.6875  0.1278    0.007835
+    0.6      0.7 14    0.6569   0.8571  0.2003    0.010742
+    0.7      0.8 24    0.7613   0.7917  0.0304    0.002792
+    0.8      0.9 37    0.8399   0.8378  0.0021    0.000299
+    0.9      1.0  0         -        -       -    0.000000
+
+--- TRAIN (FINAL in-sample) ---
+Brier=0.086677
+LogLoss=0.305364
+ECE(10 bins)=0.079325
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1 79    0.0846   0.0000  0.0846    0.025599
+    0.1      0.2 51    0.1344   0.1176  0.0168    0.003280
+    0.2      0.3 17    0.2445   0.1176  0.1268    0.008260
+    0.3      0.4 11    0.3479   0.2727  0.0751    0.003167
+    0.4      0.5 10    0.4489   0.5000  0.0511    0.001957
+    0.5      0.6  7    0.5620   0.5714  0.0094    0.000253
+    0.6      0.7 15    0.6473   0.8000  0.1527    0.008773
+    0.7      0.8 25    0.7502   0.7600  0.0098    0.000935
+    0.8      0.9 46    0.8462   1.0000  0.1538    0.027102
+    0.9      1.0  0         -        -       -    0.000000
+
+--- TEST ---
+Brier=0.110138
+LogLoss=0.378451
+ECE(10 bins)=0.161553
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1  3    0.0865   0.3333  0.2468    0.025535
+    0.1      0.2 12    0.1280   0.0000  0.1280    0.052974
+    0.2      0.3  2    0.2838   0.0000  0.2838    0.019570
+    0.3      0.4  2    0.3168   0.0000  0.3168    0.021851
+    0.4      0.5  0         -        -       -    0.000000
+    0.5      0.6  1    0.5693   0.0000  0.5693    0.019632
+    0.6      0.7  2    0.6868   0.5000  0.1868    0.012881
+    0.7      0.8  1    0.7399   1.0000  0.2601    0.008969
+    0.8      0.9  6    0.8340   0.8333  0.0007    0.000141
+    0.9      1.0  0         -        -       -    0.000000
+
+------------------------------------------------------------------------------
+[FEATURE IMPORTANCE]
+      feature  importance
+         FIB4    0.267911
+        NAFLD    0.243989
+         APRI    0.152122
+   PLT [k/µl]    0.111727
+    AST [U/l]    0.064134
+Albumin [g/l]    0.052173
+    ALT [U/l]    0.045373
+          Age    0.038433
+        RITIS    0.024137
+
+------------------------------------------------------------------------------
+[PLOT] Saved reliability plot to: calibration_reliability.png

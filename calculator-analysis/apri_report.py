@@ -1,6 +1,12 @@
 import pandas as pd
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
-import os
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    cohen_kappa_score,
+    roc_auc_score
+)
+from metrics import _print_per_class_metrics
 
 def load_data(path):
     return pd.read_csv(path)
@@ -24,7 +30,7 @@ def map_apri_to_binary(apri, cutoff=0.7):
     return int(apri >= cutoff)
 
 def evaluate_multi(df, col_true='FSCORE', col_pred='f_pred'):
-    #Metryki dla 4 klas
+    #Metryki dla 4 klascha
     y_true = df[col_true]
     y_pred = df[col_pred]
     print("=== 4-klasowa klasyfikacja ===")
@@ -38,6 +44,19 @@ def evaluate_multi(df, col_true='FSCORE', col_pred='f_pred'):
                                     "F4"]))
     print()
 
+    _print_per_class_metrics(cm, labels)
+
+    macro_f1 = f1_score(y_true, y_pred, labels=labels, average='macro')
+    weighted_f1 = f1_score(y_true, y_pred, labels=labels, average='weighted')
+    kappa = cohen_kappa_score(y_true, y_pred, labels=labels)
+    weighted_kappa = cohen_kappa_score(y_true, y_pred, labels=labels, weights='quadratic')
+
+    print(f"Macro-F1:              {macro_f1:.3f}")
+    print(f"Weighted-F1:           {weighted_f1:.3f}")
+    print(f"Cohen's kappa:         {kappa:.3f}")
+    print(f"Weighted kappa (quad): {weighted_kappa:.3f}")
+    print()
+
 
 def evaluate_binary(df, col_true='y_true_bin', col_pred='y_pred_bin', col_score='APRI'):
     #Metryki dla 2 klas
@@ -46,8 +65,7 @@ def evaluate_binary(df, col_true='y_true_bin', col_pred='y_pred_bin', col_score=
     y_score = df[col_score]
     print("=== Binarna klasyfikacja ===")
     print("Confusion matrix:\n", confusion_matrix(y_true, y_pred))
-    print(classification_report(y_true, y_pred,
-                                target_names=['F1–2 (low)', 'F3–4 (high)']))
+    print(classification_report(y_true, y_pred, target_names=['F1–2 (low)', 'F3–4 (high)']))
     print(f"AUC: {roc_auc_score(y_true, y_score):.3f}")
     print()
 
@@ -63,6 +81,8 @@ def run_all(path_csv):
     df['y_pred_bin'] = df['APRI'].apply(map_apri_to_binary)
     evaluate_binary(df)
 
+    print("=== HCV ===")
+
     #4 klasy – tylko HCV+
     df_hcv = filter_hcv(df)
     df_hcv['f_pred'] = df_hcv['APRI'].apply(map_apri_to_fscore_multi)
@@ -74,4 +94,4 @@ def run_all(path_csv):
     evaluate_binary(df_hcv)
 
 if __name__ == "__main__":
-    run_all("Data/Modified/Fscore-Cat-Imp.csv")
+    run_all("../Data/Modified/Fscore-No-Cat-Imp.csv")

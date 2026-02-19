@@ -1,0 +1,32 @@
+{
+  "intercept": 0.3195913974501076,
+  "coefficients": {
+    "APRI": 0.476976638838718,
+    "FIB4": 0.38063800433400874,
+    "RITIS": -0.6050561427647521,
+    "NAFLD": 0.23480117167209347,
+    "apri_x_fib4": -2.094596334565885,
+    "apri_x_ritis": 1.28668569333335
+  },
+  "feature_order": [
+    "APRI",
+    "FIB4",
+    "RITIS",
+    "NAFLD",
+    "apri_x_fib4",
+    "apri_x_ritis"
+  ],
+  "impute_medians": {
+    "APRI": 0.472,
+    "FIB4": 1.53,
+    "RITIS": 0.86,
+    "NAFLD": -2.326,
+    "apri_x_fib4": 0.037052,
+    "apri_x_ritis": 0.07373166666666667
+  },
+  "formulas": {
+    "logit": "logit(p) = intercept + sum_j coef[j] * x_j",
+    "prob": "p = 1 / (1 + exp(-logit(p)))",
+    "score_0_10": "score = 10 * p"
+  }
+}

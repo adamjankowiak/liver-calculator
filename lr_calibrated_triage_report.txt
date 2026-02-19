@@ -1,0 +1,161 @@
+FINAL TRIAGE + CALIBRATION REPORT (LogReg + Poly + fixed params)
+==============================================================================
+
+[CONFIG]
+POS_LABEL=3-4, NEG_LABEL=1-2
+Targets: Sens>= 0.95, Spec>= 0.85
+Calibration: method=sigmoid, CalCV=5
+OOF folds for thresholds: 5
+RANDOM_STATE=42
+
+[MODEL PARAMS]
+LR_PARAMS: {'C': 10, 'class_weight': 'balanced', 'penalty': 'elasticnet', 'l1_ratio': 0, 'solver': 'saga', 'max_iter': 1000, 'random_state': 42, 'n_jobs': -1}
+poly_cols: ['FIB4', 'APRI', 'RITIS', 'NAFLD']
+
+[DATA]
+Train n=261
+Test  n=29
+Prevalence (POS) train=0.3716
+Prevalence (POS) test =0.2759
+Features: ['Age', 'PLT [k/µl]', 'AST [U/l]', 'ALT [U/l]', 'Albumin [g/l]', 'FIB4', 'APRI', 'RITIS', 'NAFLD']
+
+[THRESHOLDS learned from TRAIN (OOF)]
+t_out=0.16782680
+t_in =0.33937803
+
+------------------------------------------------------------------------------
+[TRIAGE RESULTS + COVERED-ONLY]
+
+=== TRAIN (OOF) TRIAGE REPORT ===
+t_out=0.167827, t_in=0.339378
+Coverage OUT/IN/GREY: 19.2% / 40.6% / 40.2%
+Rule-out safety (OUT-only): NPV_out=0.9200, FN_rate_out=0.0800
+Rule-in certainty (IN-only): PPV_in=0.7736, FP_rate_in=0.2264
+Constraint check (binary): sens@t_out=0.9588 (>= 0.95), spec@t_in=0.8537 (>= 0.85)
+
+-- Subset counts (triage) --
+OUT:  n=50, TN=46, FN=4
+IN:   n=106, TP=82, FP=24
+GREY: n=105
+
+=== TRAIN (OOF) COVERED-ONLY METRICS ===
+Covered n=156 / 261 (59.8%)  [OUT+IN only, GREY excluded]
+TN=46, FP=24, FN=4, TP=82
+Acc=0.8205, Sens=0.9535, Spec=0.6571, PPV=0.7736, NPV=0.9200
+
+=== TRAIN (FINAL model, in-sample) TRIAGE REPORT (diagnostic) ===
+t_out=0.167827, t_in=0.339378
+Coverage OUT/IN/GREY: 18.8% / 40.6% / 40.6%
+Rule-out safety (OUT-only): NPV_out=0.9592, FN_rate_out=0.0408
+Rule-in certainty (IN-only): PPV_in=0.8019, FP_rate_in=0.1981
+Constraint check (binary): sens@t_out=0.9794 (>= 0.95), spec@t_in=0.8720 (>= 0.85)
+
+-- Subset counts (triage) --
+OUT:  n=49, TN=47, FN=2
+IN:   n=106, TP=85, FP=21
+GREY: n=106
+
+=== TRAIN (FINAL) COVERED-ONLY METRICS (diagnostic) ===
+Covered n=155 / 261 (59.4%)  [OUT+IN only, GREY excluded]
+TN=47, FP=21, FN=2, TP=85
+Acc=0.8516, Sens=0.9770, Spec=0.6912, PPV=0.8019, NPV=0.9592
+
+=== TEST TRIAGE REPORT ===
+t_out=0.167827, t_in=0.339378
+Coverage OUT/IN/GREY: 20.7% / 37.9% / 41.4%
+Rule-out safety (OUT-only): NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty (IN-only): PPV_in=0.5455, FP_rate_in=0.4545
+Constraint check (binary): sens@t_out=1.0000 (>= 0.95), spec@t_in=0.7619 (>= 0.85)
+
+-- Subset counts (triage) --
+OUT:  n=6, TN=6, FN=0
+IN:   n=11, TP=6, FP=5
+GREY: n=12
+
+=== TEST COVERED-ONLY METRICS ===
+Covered n=17 / 29 (58.6%)  [OUT+IN only, GREY excluded]
+TN=6, FP=5, FN=0, TP=6
+Acc=0.7059, Sens=1.0000, Spec=0.5455, PPV=0.5455, NPV=1.0000
+
+------------------------------------------------------------------------------
+[CALIBRATION RESULTS]
+
+--- TRAIN (OOF) ---
+Brier=0.141479
+LogLoss=0.448701
+ECE(10 bins)=0.112999
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1  0         -        -       -    0.000000
+    0.1      0.2 81    0.1531   0.0741  0.0790    0.024524
+    0.2      0.3 61    0.2440   0.1311  0.1129    0.026379
+    0.3      0.4 34    0.3518   0.4412  0.0894    0.011643
+    0.4      0.5 19    0.4436   0.7368  0.2933    0.021348
+    0.5      0.6 15    0.5481   0.7333  0.1853    0.010648
+    0.6      0.7 16    0.6555   0.6875  0.0320    0.001962
+    0.7      0.8 13    0.7488   1.0000  0.2512    0.012514
+    0.8      0.9 16    0.8528   0.8125  0.0403    0.002473
+    0.9      1.0  6    0.9344   1.0000  0.0656    0.001509
+
+--- TRAIN (FINAL in-sample) ---
+Brier=0.122759
+LogLoss=0.404818
+ECE(10 bins)=0.140212
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1  0         -        -       -    0.000000
+    0.1      0.2 91    0.1641   0.0659  0.0981    0.034220
+    0.2      0.3 55    0.2396   0.0727  0.1669    0.035170
+    0.3      0.4 25    0.3515   0.4400  0.0885    0.008474
+    0.4      0.5 22    0.4393   0.7273  0.2879    0.024270
+    0.5      0.6 13    0.5375   0.7692  0.2317    0.011540
+    0.6      0.7 14    0.6586   0.8571  0.1986    0.010652
+    0.7      0.8 18    0.7571   0.8333  0.0762    0.005258
+    0.8      0.9 15    0.8572   1.0000  0.1428    0.008209
+    0.9      1.0  8    0.9211   1.0000  0.0789    0.002419
+
+--- TEST ---
+Brier=0.112553
+LogLoss=0.381482
+ECE(10 bins)=0.165539
+
+Reliability table (10 bins):
+bin_low bin_high  n mean_pred frac_pos abs_gap ece_contrib
+    0.0      0.1  0         -        -       -    0.000000
+    0.1      0.2 13    0.1692   0.0000  0.1692    0.075835
+    0.2      0.3  4    0.2289   0.2500  0.0211    0.002915
+    0.3      0.4  2    0.3617   0.5000  0.1383    0.009535
+    0.4      0.5  2    0.4412   0.0000  0.4412    0.030425
+    0.5      0.6  1    0.5063   0.0000  0.5063    0.017460
+    0.6      0.7  0         -        -       -    0.000000
+    0.7      0.8  3    0.7551   0.6667  0.0884    0.009146
+    0.8      0.9  4    0.8534   1.0000  0.1466    0.020222
+    0.9      1.0  0         -        -       -    0.000000
+
+------------------------------------------------------------------------------
+[LR COEFFICIENTS (diagnostic)]
+             feature  coef_mean  coef_std
+         poly__NAFLD   1.983471  0.350893
+       poly__NAFLD^2   1.230118  0.533836
+    poly__APRI RITIS   0.887264  0.217410
+    other__AST [U/l]   0.828905  0.568239
+    poly__FIB4 NAFLD   0.636299  0.315395
+          poly__APRI   0.450962  0.347405
+          poly__FIB4   0.371746  0.312013
+    poly__APRI NAFLD   0.370255  0.375642
+       poly__RITIS^2   0.279492  0.361377
+          other__Age   0.177460  0.132939
+    other__ALT [U/l]  -0.022298  0.240428
+   other__PLT [k/µl]  -0.121300  0.235832
+        poly__FIB4^2  -0.157168  0.362418
+other__Albumin [g/l]  -0.293646  0.108295
+   poly__RITIS NAFLD  -0.413653  0.495756
+        poly__APRI^2  -0.560847  0.490587
+         poly__RITIS  -0.672862  0.224078
+     poly__FIB4 APRI  -1.096987  0.427902
+    poly__FIB4 RITIS  -1.263032  0.244224
+
+------------------------------------------------------------------------------
+[PLOT] Saved reliability plot to: lr_calibration_reliability.png

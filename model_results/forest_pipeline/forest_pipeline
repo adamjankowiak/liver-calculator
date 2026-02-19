@@ -1,0 +1,19 @@
+=== MODEL Z SZARĄ STREFĄ - TYLKO KALKULATORY JAKO ATRYBUTY===
+
+=== TRAIN (OOF) TRIAGE REPORT ===
+t_out=0.1130, t_in=0.4834
+Coverage OUT/IN/GREY: 25.3% / 40.1% / 34.6%
+Rule-out safety: NPV_out=0.9324, FN_rate_out=0.0676
+Rule-in certainty: PPV_in=0.7778, FP_rate_in=0.2222
+Constraints check: sens@t_out=0.9565 (>= 0.95), spec@t_in=0.8531 (>= 0.85)
+Triage score (min grey): 0.3459
+Triage score (utility):  1.1336
+
+=== TEST TRIAGE REPORT ===
+t_out=0.1130, t_in=0.4834
+Coverage OUT/IN/GREY: 31.0% / 24.1% / 44.8%
+Rule-out safety: NPV_out=1.0000, FN_rate_out=0.0000
+Rule-in certainty: PPV_in=0.8571, FP_rate_in=0.1429
+Constraints check: sens@t_out=1.0000 (>= 0.95), spec@t_in=0.9524 (>= 0.85)
+Triage score (min grey): 0.4483
+Triage score (utility):  0.6207

@@ -1,0 +1,5 @@
+\begin{aligned}
+\text{logit}(p) &= 0.319591 + +0.476977\cdot APRI + +0.380638\cdot FIB4 + -0.605056\cdot RITIS + +0.234801\cdot NAFLD + -2.094596\cdot apri_x_fib4 + +1.286686\cdot apri_x_ritis \\
+p &= \frac{1}{1 + e^{-\text{logit}(p)}} \\
+\text{Score}_{0\text{--}10} &= 10\cdot p
+\end{aligned}

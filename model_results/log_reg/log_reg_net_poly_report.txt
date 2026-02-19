@@ -1,0 +1,42 @@
+Rozkład klas:
+FSCORE
+1-2    164
+3-4     97
+
+=== REGRESJA LOGISTYCZNA - NESTED CV -  ===
+
+Nested CV results (mean ± std):
+  acc        : 0.8544 ± 0.0899
+  f1         : 0.8039 ± 0.1278
+  recall     : 0.8158 ± 0.1625
+  specificity: 0.8782 ± 0.0799
+  ppv        : 0.8030 ± 0.1256
+  npv        : 0.8931 ± 0.0885
+
+Best params per outer fold:
+  Fold 1: {'clf__C': 0.1, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0.2, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+  Fold 2: {'clf__C': 0.1, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0.1, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+  Fold 3: {'clf__C': 0.1, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0.5, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+  Fold 4: {'clf__C': 0.01, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+  Fold 5: {'clf__C': 1, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+
+Per-fold counts (tn, fp, fn, tp):
+      tn  fp  fn  tp
+fold
+1     28   5   2  18
+2     29   3   8  12
+3     26   7   6  13
+4     33   0   1  18
+5     28   5   1  18
+
+FINAL best params: {'clf__C': 10, 'clf__class_weight': 'balanced', 'clf__l1_ratio': 0, 'clf__max_iter': 1000, 'clf__penalty': 'elasticnet', 'clf__solver': 'saga'}
+FINAL CV best score: 0.8485567718946072
+
+FINAL model metrics on ALL data (in-sample, może być zawyżone):
+  acc        : 0.8736
+  f1         : 0.8325
+  recall     : 0.8454
+  specificity: 0.8902
+  ppv        : 0.8200
+  npv        : 0.9068
+  Counts (tn, fp, fn, tp): 146 18 15 82

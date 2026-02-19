@@ -1,0 +1,23 @@
+Najlepsze parametry: {'ccp_alpha': 0.0, 'criterion': 'entropy', 'max_depth': 3, 'min_samples_leaf': 3, 'min_samples_split': 8}
+Najlepszy wynik CV (średni): 0.8358200158490134
+
+Classification report:
+              precision    recall  f1-score   support
+
+         1-2       0.95      0.90      0.93        21
+         3-4       0.78      0.88      0.82         8
+
+    accuracy                           0.90        29
+   macro avg       0.86      0.89      0.88        29
+weighted avg       0.90      0.90      0.90        29
+
+Confusion matrix:
+ [[19  2]
+ [ 1  7]]
+
+Dodatkowe metryki (pozytywna klasa = '3-4'):
+  Recall / Sensitivity (TPR): 0.8750
+  Specificity (TNR):          0.9048
+  PPV (Precision):            0.7778
+  NPV:                        0.9500
+  Counts (tn, fp, fn, tp):    19, 2, 1, 7

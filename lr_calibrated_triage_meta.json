@@ -1,0 +1,105 @@
+{
+  "POS_LABEL": "3-4",
+  "NEG_LABEL": "1-2",
+  "SENS_TARGET": 0.95,
+  "SPEC_TARGET": 0.85,
+  "CAL_METHOD": "sigmoid",
+  "CAL_CV": 5,
+  "THR_OOF_FOLDS": 5,
+  "RANDOM_STATE": 42,
+  "LR_PARAMS": {
+    "C": 10,
+    "class_weight": "balanced",
+    "penalty": "elasticnet",
+    "l1_ratio": 0,
+    "solver": "saga",
+    "max_iter": 1000,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "feature_cols": [
+    "Age",
+    "PLT [k/µl]",
+    "AST [U/l]",
+    "ALT [U/l]",
+    "Albumin [g/l]",
+    "FIB4",
+    "APRI",
+    "RITIS",
+    "NAFLD"
+  ],
+  "poly_cols": [
+    "FIB4",
+    "APRI",
+    "RITIS",
+    "NAFLD"
+  ],
+  "t_out": 0.16782679975891682,
+  "t_in": 0.3393780311843466,
+  "train_path": "Data/Modified/Full/Final_reduced/2-class/Scaled/patients.csv",
+  "test_path": "Data/Modified/Full/Final_reduced/2-class/Scaled/control.csv",
+  "report_path": "lr_calibrated_triage_report.txt",
+  "model_path": "lr_calibrated_triage_model.joblib",
+  "reliability_plot": "lr_calibration_reliability.png",
+  "calibration_summary": {
+    "train_oof": {
+      "brier": 0.1414790501420588,
+      "logloss": 0.448700777735592,
+      "ece": 0.1129991002414191
+    },
+    "train_final": {
+      "brier": 0.1227594624239384,
+      "logloss": 0.4048176357643737,
+      "ece": 0.1402122239110299
+    },
+    "test": {
+      "brier": 0.11255289566995683,
+      "logloss": 0.38148177136354067,
+      "ece": 0.16553857182174375
+    }
+  },
+  "covered_only_summary": {
+    "train_oof": {
+      "n": 261,
+      "n_covered": 156,
+      "coverage": 0.5977011494252874,
+      "tn": 46,
+      "fp": 24,
+      "fn": 4,
+      "tp": 82,
+      "acc": 0.8205128205128205,
+      "sens": 0.9534883720930233,
+      "spec": 0.6571428571428571,
+      "ppv": 0.7735849056603774,
+      "npv": 0.92
+    },
+    "train_final": {
+      "n": 261,
+      "n_covered": 155,
+      "coverage": 0.5938697318007663,
+      "tn": 47,
+      "fp": 21,
+      "fn": 2,
+      "tp": 85,
+      "acc": 0.8516129032258064,
+      "sens": 0.9770114942528736,
+      "spec": 0.6911764705882353,
+      "ppv": 0.8018867924528302,
+      "npv": 0.9591836734693877
+    },
+    "test": {
+      "n": 29,
+      "n_covered": 17,
+      "coverage": 0.5862068965517241,
+      "tn": 6,
+      "fp": 5,
+      "fn": 0,
+      "tp": 6,
+      "acc": 0.7058823529411765,
+      "sens": 1.0,
+      "spec": 0.5454545454545454,
+      "ppv": 0.5454545454545454,
+      "npv": 1.0
+    }
+  }
+}

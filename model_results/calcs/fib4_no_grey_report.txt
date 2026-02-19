@@ -1,0 +1,73 @@
+=== FIB-4: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      261
+Liczba w gray zone:           74 (28.4%)
+Liczba użyta do ewaluacji:    187 (71.6%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.92      0.95      0.94       129
+       F3-F4       0.89      0.81      0.85        58
+
+    accuracy                           0.91       187
+   macro avg       0.90      0.88      0.89       187
+weighted avg       0.91      0.91      0.91       187
+
+Macro-F1:              0.891
+Weighted-F1:           0.908
+Cohen's kappa:         0.782
+Weighted kappa (quad): 0.782
+
+Per-class metrics:
+Klasa 1-2:
+  TP=123, FP=11, TN=47, FN=6
+  Sensitivity (recall): 0.953
+  Specificity:          0.810
+  PPV (precision):      0.918
+  NPV:                  0.887
+  F1:                   0.935
+
+Klasa 3-4:
+  TP=47, FP=6, TN=123, FN=11
+  Sensitivity (recall): 0.810
+  Specificity:          0.953
+  PPV (precision):      0.887
+  NPV:                  0.918
+  F1:                   0.847
+
+  === FIB-4 - TEST: wszystkie przypadki ===
+=== 2-klasowa klasyfikacja (z gray zone) ===
+Łączna liczba pacjentów:      29
+Liczba w gray zone:           5 (17.2%)
+Liczba użyta do ewaluacji:    24 (82.8%)
+
+              precision    recall  f1-score   support
+
+       F1-F2       0.95      1.00      0.97        18
+       F3-F4       1.00      0.83      0.91         6
+
+    accuracy                           0.96        24
+   macro avg       0.97      0.92      0.94        24
+weighted avg       0.96      0.96      0.96        24
+
+Macro-F1:              0.941
+Weighted-F1:           0.957
+Cohen's kappa:         0.882
+Weighted kappa (quad): 0.882
+
+Per-class metrics:
+Klasa 1-2:
+  TP=18, FP=1, TN=5, FN=0
+  Sensitivity (recall): 1.000
+  Specificity:          0.833
+  PPV (precision):      0.947
+  NPV:                  1.000
+  F1:                   0.973
+
+Klasa 3-4:
+  TP=5, FP=0, TN=18, FN=1
+  Sensitivity (recall): 0.833
+  Specificity:          1.000
+  PPV (precision):      1.000
+  NPV:                  0.947
+  F1:                   0.909

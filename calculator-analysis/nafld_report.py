@@ -6,32 +6,32 @@ from sklearn.metrics import (
     cohen_kappa_score,
     roc_auc_score
 )
-from apri_3_class_report import _print_per_class_metrics
+from metrics import _print_per_class_metrics
 
 def load_data(path):
     return pd.read_csv(path)
 
-def map_ritis_to_fscore_3_class(ritis, thresholds=(1.5, 2.0)):
+def map_nafld_to_fscore_3_class(nafld, thresholds=(-1.455, 0.676)):
     t0, t1= thresholds
-    if ritis < t0:
+    if nafld < t0:
         return "1"
-    elif ritis < t1:
+    elif nafld < t1:
         return "2-3"
     else:
         return "4"
 
-def map_ritis_to_fscore_binary(ritis, cutoff=1.5):
-    return int(ritis >= cutoff)
+def map_nafld_to_fscore_binary(nafld, cutoff=-1.455):
+    return int(nafld >= cutoff)
 
-def evaluate_3_class_ritis(df, col_true='FSCORE', col_pred='f_pred'):
+def evaluate_3_class_nafld(df, col_true='FSCORE', col_pred='f_pred'):
     y_true = df[col_true]
     y_pred = df[col_pred]
     labels = ["1", "2-3", "4"]
     cm = confusion_matrix(y_true, y_pred, labels=labels)
     print("=== 3-klasowa klasyfikacja===")
-    print("Confusion matrix:\n", confusion_matrix(y_true, y_pred, labels=labels))
+    print("Confusion matrix:\n", confusion_matrix(y_true, y_pred, labels=["1","2-3","4"]))
     print(classification_report(y_true, y_pred,
-                                labels=labels,
+                                labels=["1","2-3","4"],
                                 target_names=['F1', 'F2-F3', 'F4']))
     print()
     # metryki wieloklasowe
@@ -47,7 +47,7 @@ def evaluate_3_class_ritis(df, col_true='FSCORE', col_pred='f_pred'):
     print()
     _print_per_class_metrics(cm,labels)
 
-def evaluate_binary_ritis(df, col_true='y_true_bin', col_pred='y_pred_bin', col_score='RITIS'):
+def evaluate_binary_nafld(df, col_true='y_true_bin', col_pred='y_pred_bin', col_score='NAFLD'):
     y_true = df[col_true]
     y_pred = df[col_pred]
     y_score = df[col_score]
@@ -59,15 +59,15 @@ def evaluate_binary_ritis(df, col_true='y_true_bin', col_pred='y_pred_bin', col_
 
 def run_3_class(path_csv):
     df = load_data(path_csv)
-    df['f_pred'] = df['RITIS'].apply(map_ritis_to_fscore_3_class)
-    evaluate_3_class_ritis(df)
+    df['f_pred'] = df['NAFLD'].apply(map_nafld_to_fscore_3_class)
+    evaluate_3_class_nafld(df)
 
 def run_binary(path_csv):
     df = load_data(path_csv)
     df['y_true_bin'] = df['FSCORE'].apply(lambda f: 0 if f == 1 else 1)
-    df['y_pred_bin'] = df['RITIS'].map(map_ritis_to_fscore_binary)
-    evaluate_binary_ritis(df)
+    df['y_pred_bin'] = df['NAFLD'].map(map_nafld_to_fscore_binary)
+    evaluate_binary_nafld(df)
 
 if __name__ == '__main__':
-    run_3_class("../Data/RITIS/Fscore-No-Cat-Imp-3-Class-RITIS.csv")
-    #run_binary("Data/RITIS/Fscore-No-Cat-Imp-RITIS.csv")
+    run_3_class("../Data/NAFLD/BMI_30/Fscore-No-Cat-Imp-3-Class-NAFLD_BMI_30.csv")
+    #run_binary("Data/NAFLD/BMI_30/Fscore-No-Cat-Imp-NAFLD_BMI_30.csv")
