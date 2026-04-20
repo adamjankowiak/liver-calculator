@@ -179,6 +179,32 @@ To run the local API scaffold:
 python scripts/serve_api.py
 ```
 
+Then open:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Run with Docker
+
+To run the local web app and API through Docker:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000
+```
+
+The containerized app serves:
+
+- the local browser interface at `/`,
+- the prediction API at `/predict`,
+- interactive API docs at `/docs`.
+
 ## Product Goal
 
 I want this repository to evolve from a thesis-origin ML project into a usable web application where a user can:

@@ -1,14 +1,15 @@
 from fastapi.testclient import TestClient
 
-from liver_calculator.api import main as api_main
+from liver_calculator.api.main import app
+from liver_calculator.api import routes_predict
 
 
-client = TestClient(api_main.app)
+client = TestClient(app)
 
 
 def test_predict_endpoint(monkeypatch):
     monkeypatch.setattr(
-        api_main,
+        routes_predict,
         "score_patient",
         lambda payload: {
             "model_name": "meta_logistic",
@@ -38,3 +39,26 @@ def test_predict_endpoint(monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["triage_zone"] == "IN"
+
+
+def test_model_info_endpoint(monkeypatch):
+    monkeypatch.setattr(
+        routes_predict,
+        "get_model_summary",
+        lambda: {
+            "model_name": "meta_logistic",
+            "model_path": "models/model.joblib",
+            "metadata_path": "models/metadata/model.json",
+            "positive_label": "3-4",
+            "negative_label": "1-2",
+            "threshold_out": 0.10,
+            "threshold_in": 0.80,
+            "feature_count": 9,
+            "feature_cols": ["Age"],
+        },
+    )
+
+    response = client.get("/model-info")
+
+    assert response.status_code == 200
+    assert response.json()["feature_count"] == 9

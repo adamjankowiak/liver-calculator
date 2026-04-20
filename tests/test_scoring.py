@@ -4,6 +4,7 @@ from liver_calculator.schemas import PatientFeatures
 from liver_calculator.services.scoring import (
     LoadedModelBundle,
     build_feature_frame,
+    get_model_summary,
     score_patient,
     triage_from_probability,
 )
@@ -15,7 +16,7 @@ class DummyModel:
     def predict_proba(self, frame):
         assert list(frame.columns) == [
             "Age",
-            "PLT [k/Âµl]",
+            "PLT [k/ul]",
             "AST [U/l]",
             "ALT [U/l]",
             "Albumin [g/l]",
@@ -41,19 +42,29 @@ def make_payload() -> PatientFeatures:
     )
 
 
+def make_meta() -> dict[str, object]:
+    return {
+        "feature_cols": [
+            "Age",
+            "PLT [k/ul]",
+            "AST [U/l]",
+            "ALT [U/l]",
+            "Albumin [g/l]",
+            "FIB4",
+            "APRI",
+            "RITIS",
+            "NAFLD",
+        ],
+        "POS_LABEL": "3-4",
+        "NEG_LABEL": "1-2",
+        "t_out": 0.10,
+        "t_in": 0.80,
+    }
+
+
 def test_build_feature_frame_uses_metadata_order():
     payload = make_payload()
-    feature_cols = [
-        "Age",
-        "PLT [k/Âµl]",
-        "AST [U/l]",
-        "ALT [U/l]",
-        "Albumin [g/l]",
-        "FIB4",
-        "APRI",
-        "RITIS",
-        "NAFLD",
-    ]
+    feature_cols = make_meta()["feature_cols"]
 
     frame = build_feature_frame(payload, feature_cols)
 
@@ -69,29 +80,18 @@ def test_triage_from_probability():
 
 
 def test_score_patient_returns_expected_shape():
-    bundle = LoadedModelBundle(
-        model=DummyModel(),
-        meta={
-            "feature_cols": [
-                "Age",
-                "PLT [k/Âµl]",
-                "AST [U/l]",
-                "ALT [U/l]",
-                "Albumin [g/l]",
-                "FIB4",
-                "APRI",
-                "RITIS",
-                "NAFLD",
-            ],
-            "POS_LABEL": "3-4",
-            "NEG_LABEL": "1-2",
-            "t_out": 0.10,
-            "t_in": 0.80,
-        },
-    )
+    bundle = LoadedModelBundle(model=DummyModel(), meta=make_meta())
 
     result = score_patient(make_payload(), bundle=bundle)
 
     assert result["positive_label"] == "3-4"
     assert result["triage_zone"] == "IN"
     assert result["probability_positive"] == 0.92
+
+
+def test_get_model_summary_uses_metadata_only():
+    summary = get_model_summary(metadata=make_meta())
+
+    assert summary["model_name"] == "meta_logistic"
+    assert summary["feature_count"] == 9
+    assert summary["threshold_in"] == 0.80

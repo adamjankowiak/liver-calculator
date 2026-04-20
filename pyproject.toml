@@ -13,6 +13,7 @@ authors = [
 ]
 dependencies = [
   "fastapi>=0.115",
+  "jinja2>=3.1",
   "joblib>=1.4",
   "numpy>=1.26",
   "pandas>=2.2",
@@ -33,9 +34,13 @@ train = [
 
 [tool.setuptools]
 package-dir = { "" = "src" }
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"liver_calculator.web" = ["templates/*.html", "static/*.css", "static/*.js"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

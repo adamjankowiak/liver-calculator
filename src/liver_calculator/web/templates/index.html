@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Local Inference Demo</p>
+        <h1>Liver Meta Calculator</h1>
+        <p class="hero-text">
+          Enter calculator values and laboratory parameters to run the trained meta-calculator
+          locally through FastAPI.
+        </p>
+      </div>
+
+      <aside class="model-card">
+        <h2>Model Status</h2>
+        <p class="status-pill {{ 'status-ready' if model_ready else 'status-missing' }}">
+          {{ 'Ready' if model_ready else 'Artifacts missing' }}
+        </p>
+        {% if model_summary %}
+        <dl class="summary-grid">
+          <div>
+            <dt>Model</dt>
+            <dd>{{ model_summary.model_name }}</dd>
+          </div>
+          <div>
+            <dt>Feature Count</dt>
+            <dd>{{ model_summary.feature_count }}</dd>
+          </div>
+          <div>
+            <dt>Rule-out</dt>
+            <dd>{{ '%.4f'|format(model_summary.threshold_out) }}</dd>
+          </div>
+          <div>
+            <dt>Rule-in</dt>
+            <dd>{{ '%.4f'|format(model_summary.threshold_in) }}</dd>
+          </div>
+        </dl>
+        {% else %}
+        <p class="muted">
+          Place a trained model artifact and matching metadata in <code>models/</code> to enable
+          interactive predictions.
+        </p>
+        {% endif %}
+      </aside>
+    </section>
+
+    <section class="app-grid">
+      <section class="panel form-panel">
+        <div class="panel-header">
+          <h2>Patient Input</h2>
+          <button class="ghost-button" id="fill-example" type="button">Use Example Values</button>
+        </div>
+
+        <form id="prediction-form" class="prediction-form">
+          <div class="form-grid">
+            <label>
+              <span>Age</span>
+              <input id="age" name="age" type="number" min="0" step="0.1" required>
+            </label>
+            <label>
+              <span>Platelets [k/uL]</span>
+              <input id="platelets_k_per_ul" name="platelets_k_per_ul" type="number" min="0.1" step="0.1" required>
+            </label>
+            <label>
+              <span>AST [U/L]</span>
+              <input id="ast_u_l" name="ast_u_l" type="number" min="0" step="0.1" required>
+            </label>
+            <label>
+              <span>ALT [U/L]</span>
+              <input id="alt_u_l" name="alt_u_l" type="number" min="0" step="0.1" required>
+            </label>
+            <label>
+              <span>Albumin [g/L]</span>
+              <input id="albumin_g_l" name="albumin_g_l" type="number" min="0.1" step="0.1" required>
+            </label>
+            <label>
+              <span>FIB-4</span>
+              <input id="fib4" name="fib4" type="number" step="0.0001" required>
+            </label>
+            <label>
+              <span>APRI</span>
+              <input id="apri" name="apri" type="number" step="0.0001" required>
+            </label>
+            <label>
+              <span>de Ritis</span>
+              <input id="ritis" name="ritis" type="number" step="0.0001" required>
+            </label>
+            <label>
+              <span>NAFLD Score</span>
+              <input id="nafld" name="nafld" type="number" step="0.0001" required>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit" {% if not model_ready %}disabled{% endif %}>
+              Run Prediction
+            </button>
+            <p class="muted">
+              The form calls <code>/predict</code> and displays the result below without reloading
+              the page.
+            </p>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel result-panel">
+        <div class="panel-header">
+          <h2>Prediction Output</h2>
+          <a class="text-link" href="/docs" target="_blank" rel="noreferrer">Open API docs</a>
+        </div>
+
+        <div id="result-state" class="result-state">
+          <p class="muted">No prediction yet. Submit values to see the model output.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    window.modelReady = {{ 'true' if model_ready else 'false' }};
+  </script>
+  <script src="{{ url_for('static', path='app.js') }}"></script>
+</body>
+</html>

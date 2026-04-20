@@ -8,7 +8,7 @@ from typing import Any
 import joblib
 import pandas as pd
 
-from liver_calculator.config import DEFAULT_MODEL
+from liver_calculator.config import get_model_config
 from liver_calculator.schemas import PatientFeatures
 
 
@@ -23,8 +23,9 @@ def load_model_bundle(
     model_path: Path | None = None,
     metadata_path: Path | None = None,
 ) -> LoadedModelBundle:
-    resolved_model_path = Path(model_path) if model_path else DEFAULT_MODEL.model_path
-    resolved_metadata_path = Path(metadata_path) if metadata_path else DEFAULT_MODEL.metadata_path
+    model_config = get_model_config()
+    resolved_model_path = Path(model_path) if model_path else model_config.model_path
+    resolved_metadata_path = Path(metadata_path) if metadata_path else model_config.metadata_path
 
     if not resolved_model_path.exists():
         raise FileNotFoundError(f"Model artifact not found: {resolved_model_path}")
@@ -32,9 +33,20 @@ def load_model_bundle(
         raise FileNotFoundError(f"Model metadata not found: {resolved_metadata_path}")
 
     model = joblib.load(resolved_model_path)
-    with resolved_metadata_path.open("r", encoding="utf-8") as handle:
-        meta = json.load(handle)
+    meta = load_model_metadata(resolved_metadata_path)
     return LoadedModelBundle(model=model, meta=meta)
+
+
+@lru_cache(maxsize=4)
+def load_model_metadata(metadata_path: Path | None = None) -> dict[str, Any]:
+    model_config = get_model_config()
+    resolved_metadata_path = Path(metadata_path) if metadata_path else model_config.metadata_path
+
+    if not resolved_metadata_path.exists():
+        raise FileNotFoundError(f"Model metadata not found: {resolved_metadata_path}")
+
+    with resolved_metadata_path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
 
 
 def _canonical_feature_values(payload: PatientFeatures) -> dict[str, float]:
@@ -96,6 +108,7 @@ def score_patient(
 ) -> dict[str, Any]:
     loaded_bundle = bundle or load_model_bundle()
     meta = loaded_bundle.meta
+    model_config = get_model_config()
 
     feature_cols = meta["feature_cols"]
     frame = build_feature_frame(payload, feature_cols)
@@ -108,11 +121,28 @@ def score_patient(
     triage_zone = triage_from_probability(probability_positive, meta["t_out"], meta["t_in"])
 
     return {
-        "model_name": DEFAULT_MODEL.name,
+        "model_name": meta.get("model_name", model_config.name),
         "positive_label": positive_label,
         "negative_label": negative_label,
         "probability_positive": probability_positive,
         "triage_zone": triage_zone,
         "threshold_out": float(meta["t_out"]),
         "threshold_in": float(meta["t_in"]),
+    }
+
+
+def get_model_summary(metadata: dict[str, Any] | None = None) -> dict[str, Any]:
+    model_config = get_model_config()
+    meta = metadata or load_model_metadata()
+
+    return {
+        "model_name": meta.get("model_name", model_config.name),
+        "model_path": str(model_config.model_path),
+        "metadata_path": str(model_config.metadata_path),
+        "positive_label": meta["POS_LABEL"],
+        "negative_label": meta["NEG_LABEL"],
+        "threshold_out": float(meta["t_out"]),
+        "threshold_in": float(meta["t_in"]),
+        "feature_count": len(meta["feature_cols"]),
+        "feature_cols": meta["feature_cols"],
     }

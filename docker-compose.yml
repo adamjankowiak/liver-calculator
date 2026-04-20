@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: liver-meta-calculator
+    environment:
+      APP_TITLE: ${APP_TITLE:-Liver Meta Calculator}
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      APP_RELOAD: ${APP_RELOAD:-false}
+      MODEL_NAME: ${MODEL_NAME:-meta_logistic}
+      MODEL_PATH: ${MODEL_PATH:-models/lr_calibrated_triage_model.joblib}
+      MODEL_METADATA_PATH: ${MODEL_METADATA_PATH:-models/metadata/lr_calibrated_triage_meta.json}
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./models:/app/models:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
