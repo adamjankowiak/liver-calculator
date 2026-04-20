@@ -31,7 +31,6 @@ My work included:
 - building and comparing decision tree, random forest, and logistic variants,
 - calibrating predicted probabilities,
 - designing threshold-based `rule-out` / `rule-in` / `grey zone` logic,
-- reorganizing the repository into a cleaner ML Engineer / Data Scientist style project.
 
 ## Data
 
