@@ -1,0 +1,24 @@
+.idea/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+build/
+dist/
+
+# Local environment files
+.env
+.env.*
+
+# Generated project outputs
+reports/figures/generated/
+reports/metrics/generated/
+models/generated/

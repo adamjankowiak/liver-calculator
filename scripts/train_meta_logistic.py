@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
@@ -36,13 +37,15 @@ THR_OOF_FOLDS = 5        # OOF na TRAIN do wyznaczenia progów
 RANDOM_STATE = 42
 
 # ŚCIEŻKI – ustaw pod siebie (jak w RF meta-kalkulatorze)
-TRAIN_PATH = "Data/Modified/Full/Final_reduced/2-class/Scaled/patients.csv"
-TEST_PATH  = "Data/Modified/Full/Final_reduced/2-class/Scaled/control.csv"
+ROOT_DIR = Path(__file__).resolve().parents[1]
 
-REPORT_PATH = "lr_calibrated_triage_report.txt"
-MODEL_PATH  = "lr_calibrated_triage_model.joblib"
-META_PATH   = "lr_calibrated_triage_meta.json"
-RELIABILITY_PNG = "lr_calibration_reliability.png"
+TRAIN_PATH = ROOT_DIR / "data" / "Modified" / "Full" / "Final_reduced" / "2-class" / "Scaled" / "patients.csv"
+TEST_PATH = ROOT_DIR / "data" / "Modified" / "Full" / "Final_reduced" / "2-class" / "Scaled" / "control.csv"
+
+REPORT_PATH = ROOT_DIR / "reports" / "metrics" / "lr_calibrated_triage_report.txt"
+MODEL_PATH = ROOT_DIR / "models" / "lr_calibrated_triage_model.joblib"
+META_PATH = ROOT_DIR / "models" / "metadata" / "lr_calibrated_triage_meta.json"
+RELIABILITY_PNG = ROOT_DIR / "reports" / "figures" / "lr_calibration_reliability.png"
 
 target_col = "FSCORE"
 feature_cols = [
@@ -65,6 +68,14 @@ LR_PARAMS = {
     "random_state": RANDOM_STATE,
     "n_jobs": -1,
 }
+
+
+for artifact_path in (REPORT_PATH, MODEL_PATH, META_PATH, RELIABILITY_PNG):
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _repo_relative(path_obj):
+    return path_obj.relative_to(ROOT_DIR).as_posix()
 
 
 # =========================
@@ -552,12 +563,12 @@ meta = {
     "t_out": float(t_out),
     "t_in": float(t_in),
 
-    "train_path": TRAIN_PATH,
-    "test_path": TEST_PATH,
+    "train_path": _repo_relative(TRAIN_PATH),
+    "test_path": _repo_relative(TEST_PATH) if TEST_PATH else None,
 
-    "report_path": REPORT_PATH,
-    "model_path": MODEL_PATH,
-    "reliability_plot": RELIABILITY_PNG if HAS_PLOT else None,
+    "report_path": _repo_relative(REPORT_PATH),
+    "model_path": _repo_relative(MODEL_PATH),
+    "reliability_plot": (_repo_relative(RELIABILITY_PNG) if HAS_PLOT else None),
 
     "calibration_summary": {
         "train_oof": {"brier": cal_train_oof["brier"], "logloss": cal_train_oof["logloss"], "ece": cal_train_oof["ece"]},
