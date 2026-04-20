@@ -1,6 +1,6 @@
 # Liver Meta Calculator
 
-I built this project as part of my Bachelor's thesis and I developed the entire concept, modeling workflow, code, and repository structure myself. The project is my attempt to go beyond standalone hepatology calculators and turn them into a single calibrated meta-calculator for liver fibrosis risk stratification.
+This project is my attempt to go beyond standalone hepatology calculators and turn them into a single calibrated meta-calculator for liver fibrosis risk stratification.
 
 My long-term goal is to turn this into a simple web application where a user enters clinical values and receives a probability-based fibrosis assessment together with a triage-style interpretation.
 
