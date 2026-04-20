@@ -18,6 +18,10 @@ dist/
 .env
 .env.*
 
+# Private medical data
+Data/
+data/
+
 # Generated project outputs
 reports/figures/generated/
 reports/metrics/generated/
