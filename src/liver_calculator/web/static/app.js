@@ -14,40 +14,107 @@ const form = document.getElementById("prediction-form");
 const resultState = document.getElementById("result-state");
 const fillExampleButton = document.getElementById("fill-example");
 
-function formatZoneTitle(zone) {
-  if (zone === "OUT") return "Rule-out";
-  if (zone === "IN") return "Rule-in";
-  return "Grey zone";
+function zonePresentation(zone) {
+  if (zone === "OUT") {
+    return {
+      title: "Healthy",
+      subtitle: "Low-risk interpretation",
+      description: "The model placed this case in the low-risk group.",
+      cssClass: "zone-out",
+      badge: "Healthy",
+    };
+  }
+
+  if (zone === "IN") {
+    return {
+      title: "Sick",
+      subtitle: "High-risk interpretation",
+      description: "The model placed this case in the high-risk group.",
+      cssClass: "zone-in",
+      badge: "Sick",
+    };
+  }
+
+  return {
+    title: "Grey Zone",
+    subtitle: "Uncertain interpretation",
+    description: "The model found this case inconclusive and closer follow-up may be needed.",
+    cssClass: "zone-grey",
+    badge: "Grey Zone",
+  };
+}
+
+function scoreFromProbability(probability) {
+  return probability * 10;
+}
+
+function thresholdCopy(score, type) {
+  const rounded = score.toFixed(1);
+
+  if (type === "low") {
+    return {
+      label: "Usually feels low-risk below",
+      helper: `Scores lower than ${rounded}/10 usually stay in the safer range.`,
+      value: `${rounded} / 10`,
+    };
+  }
+
+  return {
+    label: "Usually feels high-risk from",
+    helper: `Scores from ${rounded}/10 and above usually move into the more concerning range.`,
+    value: `${rounded} / 10`,
+  };
 }
 
 function renderPrediction(result) {
-  const probabilityPercent = (result.probability_positive * 100).toFixed(2);
-  const zoneClass = result.triage_zone === "OUT" ? "zone-out" : result.triage_zone === "IN" ? "zone-in" : "zone-grey";
+  const zone = zonePresentation(result.triage_zone);
+  const score = scoreFromProbability(result.probability_positive);
+  const scoreValue = score.toFixed(1);
+  const progressPercent = Math.min(100, Math.max(0, score * 10));
+  const lowThreshold = thresholdCopy(scoreFromProbability(result.threshold_out), "low");
+  const highThreshold = thresholdCopy(scoreFromProbability(result.threshold_in), "high");
 
   resultState.innerHTML = `
     <article class="result-card">
-      <section class="result-hero ${zoneClass}">
+      <section class="result-hero ${zone.cssClass}">
         <p class="eyebrow">Prediction Result</p>
-        <h2>${formatZoneTitle(result.triage_zone)}</h2>
-        <p>${result.model_name} assigned this case to <strong>${result.triage_zone}</strong>.</p>
+        <h2>${zone.title}</h2>
+        <p class="result-subtitle">${zone.subtitle}</p>
+        <p>${zone.description}</p>
+      </section>
+
+      <section class="score-card">
+        <div>
+          <span class="metric-label">Meta-Calculator Score</span>
+          <div class="score-row">
+            <span class="score-value">${scoreValue}</span>
+            <span class="score-scale">/ 10</span>
+          </div>
+        </div>
+        <span class="zone-chip ${zone.cssClass}">${zone.badge}</span>
+      </section>
+
+      <section class="score-bar-card">
+        <div class="score-bar-track">
+          <div class="score-bar-fill ${zone.cssClass}" style="width: ${progressPercent}%"></div>
+        </div>
+        <div class="score-bar-labels">
+          <span>0</span>
+          <span>5</span>
+          <span>10</span>
+        </div>
       </section>
 
       <section class="result-grid">
         <div class="metric">
-          <span class="metric-label">Probability of ${result.positive_label}</span>
-          <span class="metric-value">${probabilityPercent}%</span>
+          <span class="metric-label">${lowThreshold.label}</span>
+          <span class="metric-value">${lowThreshold.value}</span>
+          <p class="metric-helper">${lowThreshold.helper}</p>
         </div>
         <div class="metric">
-          <span class="metric-label">Triage Zone</span>
-          <span class="metric-value">${result.triage_zone}</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Rule-out Threshold</span>
-          <span class="metric-value">${result.threshold_out.toFixed(4)}</span>
-        </div>
-        <div class="metric">
-          <span class="metric-label">Rule-in Threshold</span>
-          <span class="metric-value">${result.threshold_in.toFixed(4)}</span>
+          <span class="metric-label">${highThreshold.label}</span>
+          <span class="metric-value">${highThreshold.value}</span>
+          <p class="metric-helper">${highThreshold.helper}</p>
         </div>
       </section>
     </article>
@@ -90,7 +157,13 @@ if (form) {
       return;
     }
 
-    resultState.innerHTML = '<p class="muted">Running prediction...</p>';
+    resultState.innerHTML = `
+      <div class="empty-card">
+        <p class="eyebrow">Running prediction</p>
+        <h3>Calculating result</h3>
+        <p class="muted">The score and interpretation will appear here in a moment.</p>
+      </div>
+    `;
 
     try {
       const response = await fetch("/predict", {

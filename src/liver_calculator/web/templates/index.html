@@ -9,46 +9,19 @@
 <body>
   <main class="page-shell">
     <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Local Inference Demo</p>
+      <div class="hero-copy hero-copy-full">
+        <p class="eyebrow">Local Meta-Calculator</p>
         <h1>Liver Meta Calculator</h1>
         <p class="hero-text">
-          Enter calculator values and laboratory parameters to run the trained meta-calculator
-          locally through FastAPI.
+          Enter calculator values and laboratory parameters to get a simple liver fibrosis
+          interpretation with a score from 0 to 10.
         </p>
+        <div class="hero-badges">
+          <span class="hero-badge badge-safe">Healthy</span>
+          <span class="hero-badge badge-grey">Grey Zone</span>
+          <span class="hero-badge badge-risk">Sick</span>
+        </div>
       </div>
-
-      <aside class="model-card">
-        <h2>Model Status</h2>
-        <p class="status-pill {{ 'status-ready' if model_ready else 'status-missing' }}">
-          {{ 'Ready' if model_ready else 'Artifacts missing' }}
-        </p>
-        {% if model_summary %}
-        <dl class="summary-grid">
-          <div>
-            <dt>Model</dt>
-            <dd>{{ model_summary.model_name }}</dd>
-          </div>
-          <div>
-            <dt>Feature Count</dt>
-            <dd>{{ model_summary.feature_count }}</dd>
-          </div>
-          <div>
-            <dt>Rule-out</dt>
-            <dd>{{ '%.4f'|format(model_summary.threshold_out) }}</dd>
-          </div>
-          <div>
-            <dt>Rule-in</dt>
-            <dd>{{ '%.4f'|format(model_summary.threshold_in) }}</dd>
-          </div>
-        </dl>
-        {% else %}
-        <p class="muted">
-          Place a trained model artifact and matching metadata in <code>models/</code> to enable
-          interactive predictions.
-        </p>
-        {% endif %}
-      </aside>
     </section>
 
     <section class="app-grid">
@@ -103,8 +76,8 @@
               Run Prediction
             </button>
             <p class="muted">
-              The form calls <code>/predict</code> and displays the result below without reloading
-              the page.
+              The result below shows a simple <code>0.0-10.0</code> score and a readable
+              interpretation.
             </p>
           </div>
         </form>
@@ -117,7 +90,11 @@
         </div>
 
         <div id="result-state" class="result-state">
-          <p class="muted">No prediction yet. Submit values to see the model output.</p>
+          <div class="empty-card">
+            <p class="eyebrow">Waiting for input</p>
+            <h3>No result yet</h3>
+            <p class="muted">Submit values to see the score and a simple interpretation.</p>
+          </div>
         </div>
       </section>
     </section>
