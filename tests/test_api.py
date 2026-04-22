@@ -62,3 +62,17 @@ def test_model_info_endpoint(monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["feature_count"] == 9
+
+
+def test_health_reports_degraded_when_model_cannot_load(monkeypatch):
+    monkeypatch.setattr(
+        routes_predict,
+        "load_model_bundle",
+        lambda: (_ for _ in ()).throw(AttributeError("incompatible sklearn artifact")),
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "degraded"
+    assert response.json()["ready"] is False
