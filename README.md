@@ -1,178 +1,188 @@
 # Liver Meta Calculator
 
-This project is my attempt to go beyond standalone hepatology calculators and turn them into a single calibrated meta-calculator for liver fibrosis risk stratification.
+Research-stage machine learning project and local web/API application for estimating the risk of advanced liver fibrosis.
 
-My long-term goal is to turn this into a simple web application where a user enters clinical values and receives a probability-based fibrosis assessment together with a triage-style interpretation.
+The project predicts the probability of advanced fibrosis, defined as:
 
-## What This Project Is
+- positive class: `FSCORE 3-4`
+- negative class: `FSCORE 1-2`
 
-I designed this project as an end-to-end machine learning workflow for distinguishing between:
+The model returns a calibrated probability `P(FSCORE 3-4)` and maps it into a triage-oriented interpretation: `OUT`, `IN`, or `GREY`.
 
-- `FSCORE 1-2`
-- `FSCORE 3-4`
+> This repository is not a certified medical device and must not be used as a substitute for clinical judgment.
 
-Instead of relying on one fixed clinical score, I combine multiple non-invasive hepatology calculators and selected laboratory parameters into one model that returns calibrated risk.
+## Project Overview
 
-I treat this as a screening and triage problem, not just as a raw classification task. That is why the output is not limited to a single yes/no answer. My meta-calculator can assign a case to:
+`liver-meta-calculator` is an end-to-end ML and application project developed from thesis-stage research on non-invasive liver fibrosis risk stratification.
 
-- `rule-out` for lower-risk patients,
-- `rule-in` for higher-risk patients,
-- `grey zone` for uncertain cases that should be evaluated further.
+The repository contains two clearly separated parts:
 
-## My Contribution
+1. **Research / ML layer**
+   - feature engineering based on established hepatology calculators,
+   - model training and calibration,
+   - threshold selection for triage logic,
+   - reports, plots, and archived experiments.
 
-I wrote the Bachelor's thesis behind this project and I also designed, implemented, tested, and iteratively improved the whole solution myself.
+2. **Application layer**
+   - FastAPI inference API,
+   - Pydantic request/response schemas,
+   - local Jinja2-based web interface,
+   - Dockerized runtime,
+   - automated tests and linting setup.
 
-My work included:
+The current application is designed for local experimentation, portfolio review, and further ML engineering work. It is not intended for direct clinical deployment.
 
-- preparing and standardizing the dataset for modeling,
-- deriving additional features from established medical calculators,
-- benchmarking classical hepatology calculators,
-- building and comparing decision tree, random forest, and logistic variants,
-- calibrating predicted probabilities,
-- designing threshold-based `rule-out` / `rule-in` / `grey zone` logic,
+## Key Features
 
-## Data
+- Binary classification target: `FSCORE 3-4` vs `FSCORE 1-2`.
+- Uses classic hepatology calculators as meta-features:
+  - `APRI`
+  - `FIB-4`
+  - `NAFLD Fibrosis Score`
+  - `de Ritis / RITIS`
+- Uses additional clinical/laboratory inputs, including:
+  - age,
+  - platelet count,
+  - AST,
+  - ALT,
+  - albumin.
+- Returns calibrated probability `P(FSCORE 3-4)`.
+- Converts probability into triage zones:
+  - `OUT` / rule-out,
+  - `IN` / rule-in,
+  - `GREY` / uncertain zone.
+- Provides a FastAPI API and local browser UI.
+- Includes Docker / Docker Compose support.
+- Includes tests and linting configuration.
 
-This project is based on private medical data obtained from the Clinic of Infectious Diseases in Poznan.
+## Clinical/Research Idea
 
-I cannot publish those medical data in this repository. For that reason:
+Standalone fibrosis calculators are useful, but each has limitations. This project treats them not as final decision rules, but as informative features for a meta-model.
 
-- the raw and processed datasets are not part of the public repo,
-- patient-level records are not available here,
-- the repository is intended to expose the model, code, artifacts, and application layer without exposing the medical source data.
+The central research idea is:
 
-I used those data to train, test, and evaluate the models, but the public version of this repository is being prepared so that the final web application can work from an already trained model and no medical dataset has to be distributed with the codebase.
+1. calculate or provide established non-invasive fibrosis scores,
+2. combine them with selected laboratory and demographic variables,
+3. estimate calibrated probability of advanced fibrosis,
+4. apply two thresholds to support triage instead of forcing every patient into a binary decision.
 
-## Core Idea Behind the Meta-Calculator
+This design explicitly separates low-risk, high-risk, and uncertain cases.
 
-I built the meta-calculator on top of four established non-invasive hepatology scores:
+Thesis-stage experiments suggested that a calibrated random forest could achieve ROC AUC around `0.88`. Outside the grey zone, reported experimental metrics were approximately:
 
-- `APRI`
-- `FIB-4`
-- `NAFLD Fibrosis Score`
-- `de Ritis`
+- sensitivity: `0.947`
+- specificity: `0.740`
+- F1: `0.853`
 
-I do not treat those calculators as final decisions. I use them as informative features. In stronger model variants, I extend them with additional clinical and laboratory parameters such as:
+These values are research-stage results only. They should not be interpreted as clinical validation.
 
-- age,
-- platelets,
-- AST,
-- ALT,
-- albumin.
+## Model Inputs and Output
 
-The model outputs a calibrated probability:
+The `/predict` endpoint expects the following input fields:
 
-`p = P(FSCORE 3-4)`
+| Field | Description |
+| --- | --- |
+| `age` | Patient age |
+| `platelets_k_per_ul` | Platelet count in thousands per microliter |
+| `ast_u_l` | AST level in U/L |
+| `alt_u_l` | ALT level in U/L |
+| `albumin_g_l` | Albumin level in g/L |
+| `fib4` | FIB-4 score |
+| `apri` | APRI score |
+| `ritis` | de Ritis / RITIS ratio |
+| `nafld` | NAFLD Fibrosis Score |
 
-I then convert that probability into a clinically more useful triage decision using two thresholds:
+The model output contains:
 
-- `t_out` for low-risk screening,
-- `t_in` for high-risk screening.
+| Field | Description |
+| --- | --- |
+| `model_name` | Name of the loaded model metadata |
+| `positive_label` | Positive class label, expected `3-4` |
+| `negative_label` | Negative class label, expected `1-2` |
+| `probability_positive` | Calibrated probability of `FSCORE 3-4` |
+| `triage_zone` | One of `OUT`, `IN`, `GREY` |
+| `threshold_out` | Rule-out threshold loaded from model metadata |
+| `threshold_in` | Rule-in threshold loaded from model metadata |
 
-Values between those thresholds are deliberately left in the `grey zone` instead of forcing an overconfident binary answer.
+## Triage Logic
 
-## Why I Built a Meta-Calculator Instead of Using Existing Calculators Alone
+The application uses two probability thresholds:
 
-In my thesis work, I first evaluated existing calculators on my dataset and treated them as strong baselines. That comparison showed that each individual calculator has useful properties, but also important weaknesses.
+- `t_out`: rule-out threshold
+- `t_in`: rule-in threshold
 
-My meta-calculator improves on the current hepatology calculators in several ways:
+The interpretation is:
 
-- it integrates information from multiple calculators instead of depending on one threshold-based score,
-- it produces calibrated probability rather than only a hard categorical rule,
-- it gives me direct control over the safety/precision trade-off through threshold design,
-- it handles uncertainty explicitly with a `grey zone`,
-- it can be tuned toward screening priorities such as minimizing missed advanced fibrosis.
+```text
+if P(FSCORE 3-4) < t_out:
+    triage_zone = OUT
 
-## Where My Meta-Calculator Outperforms Existing Calculators
+if P(FSCORE 3-4) >= t_in:
+    triage_zone = IN
 
-Based on the comparisons from my thesis and supporting presentation materials, the main advantage of my meta-calculator is that it is safer as a screening-oriented tool for advanced fibrosis.
+otherwise:
+    triage_zone = GREY
+```
 
-### Compared with FIB-4
-
-`FIB-4` was the strongest standalone baseline in my experiments, but my meta-calculator still had important advantages in screening logic.
-
-In my comparison against `FIB-4`:
-
-- my meta-calculator was less likely to miss advanced fibrosis,
-- my meta-calculator detected more patients with advanced fibrosis,
-- my meta-calculator was better aligned with a safety-first screening strategy,
-- `FIB-4` remained more selective, but that selectivity came with more missed severe cases.
-
-From the comparison figure used in my project materials:
-
-- missed advanced fibrosis cases were about `~5%` for my meta-calculator vs `~11%` for `FIB-4`,
-- detection of advanced fibrosis cases was about `~77%` for my meta-calculator vs `~50%` for `FIB-4`.
-
-In practice, I interpret this as:
-
-- my meta-calculator is better when I want to reduce the risk of overlooking severe fibrosis,
-- `FIB-4` is more selective, but that can come at the cost of missing more high-risk patients.
-
-### Compared with standalone hepatology calculators overall
-
-In my thesis-stage comparison:
-
-- `FIB-4` was the strongest single baseline overall,
-- `APRI` had useful specificity but weaker sensitivity for advanced fibrosis,
-- `NAFLD Fibrosis Score` was strong for confirmation in some settings but weak for detecting advanced fibrosis,
-- `de Ritis` was not reliable enough to be treated as a standalone screening tool for advanced fibrosis.
-
-My meta-calculator improved on that landscape by combining these signals and optimizing the final decision logic around the actual screening objective.
-
-## Selected Results
-
-From the thesis-stage evaluation:
-
-- among the standalone calculators, `FIB-4` was the strongest balanced baseline,
-- the calibrated random-forest meta-calculator achieved `ROC AUC ~= 0.88` on the full patient cohort,
-- outside the grey zone, my meta-calculator reached `Sensitivity = 0.947`, `Specificity = 0.740`, and `F1-score = 0.853` for `FSCORE 3-4`,
-- on the control subset, the thesis chapter reported `ROC AUC ~= 0.8869`.
-
-I treat these as research-stage results, not as production-grade clinical validation.
-
-## Current Direction of the Repository
-
-The thesis chapter documents the random-forest screening pipeline in detail, but this repository also contains later work beyond the thesis text.
-
-Right now, my main practical candidate for further development is:
-
-- `scripts/train_meta_logistic.py`
-
-This reflects my current direction toward a simpler and easier-to-deploy model for the future web application.
+The grey zone is intentional. It represents cases where the model should not force a confident low-risk or high-risk interpretation.
 
 ## Repository Structure
 
 ```text
 .
-|-- .github/workflows/     # CI
-|-- docs/                  # Project documentation
-|-- legacy/                # Archived thesis-era experiments, reports, and plots
-|-- models/                # Serialized models and metadata
-|-- notebooks/             # Space for future notebooks
-|-- references/            # Supporting notes and references
-|-- reports/               # Metrics, figures, and analysis outputs
-|-- scripts/               # Training and serving entrypoints
-|-- src/liver_calculator/  # Reusable inference and API package
-`-- tests/                 # Automated tests
+├── src/liver_calculator/              # Main application package
+│   ├── api/                           # FastAPI application and routes
+│   ├── web/                           # Local web UI, templates, static assets
+│   ├── services/scoring.py            # Model loading, feature mapping, prediction logic
+│   ├── config.py                      # Environment-driven app/model configuration
+│   └── schemas.py                     # Pydantic request/response schemas
+├── scripts/
+│   ├── serve_api.py                   # Run local API/web UI
+│   └── train_meta_logistic.py         # Train current logistic model candidate
+├── models/                            # Model artifacts and metadata
+├── reports/                           # Metrics, figures, and reports
+├── data/                              # Local private data, not for publication
+├── tests/                             # Automated tests
+├── docs/                              # Project documentation
+├── references/                        # Supporting materials
+├── legacy/                            # Archived research experiments
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+└── README.md
 ```
 
-## Quick Start
+## Installation
+
+Requirements:
+
+- Python `>=3.10`
+- pip
+- optional: Docker and Docker Compose
+
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
 . .venv/Scripts/activate
+```
+
+On PowerShell, use:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the project with development and training dependencies:
+
+```bash
 python -m pip install --upgrade pip
 python -m pip install -e .[dev,train]
 ```
 
-To train the current model candidate:
+## Running Locally
 
-```bash
-python scripts/train_meta_logistic.py
-```
-
-To run the local API scaffold:
+Start the local API and web UI:
 
 ```bash
 python scripts/serve_api.py
@@ -184,9 +194,29 @@ Then open:
 http://127.0.0.1:8000
 ```
 
-## Run with Docker
+Available local routes:
 
-To run the local web app and API through Docker:
+- `GET /` - local web interface
+- `GET /health` - application and model readiness status
+- `GET /model-info` - loaded model metadata summary
+- `POST /predict` - prediction endpoint
+- `GET /docs` - interactive OpenAPI documentation
+
+The default runtime configuration can be adjusted with environment variables:
+
+```text
+APP_TITLE=Liver Meta Calculator
+APP_HOST=0.0.0.0
+APP_PORT=8000
+APP_RELOAD=false
+MODEL_NAME=meta_logistic
+MODEL_PATH=models/lr_calibrated_triage_model.joblib
+MODEL_METADATA_PATH=models/metadata/lr_calibrated_triage_meta.json
+```
+
+## Docker Usage
+
+Build and run the application with Docker Compose:
 
 ```bash
 docker compose up --build
@@ -198,39 +228,119 @@ Then open:
 http://127.0.0.1:8000
 ```
 
-The containerized app serves:
+The container exposes the FastAPI app on port `8000` by default. Model artifacts are mounted from the local `models/` directory.
 
-- the local browser interface at `/`,
-- the prediction API at `/predict`,
-- interactive API docs at `/docs`.
+## API Usage
 
-## Product Goal
+Example request:
 
-I want this repository to evolve from a thesis-origin ML project into a usable web application where a user can:
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "age": 55,
+    "platelets_k_per_ul": 180,
+    "ast_u_l": 42,
+    "alt_u_l": 38,
+    "albumin_g_l": 43,
+    "fib4": 2.1,
+    "apri": 0.7,
+    "ritis": 1.1,
+    "nafld": -0.4
+  }'
+```
 
-1. enter laboratory and calculator-related values,
-2. receive a probability estimate for `FSCORE 3-4`,
-3. get a triage-oriented interpretation such as `rule-out`, `rule-in`, or `grey zone`.
+Example response shape:
 
-The repository already contains the first FastAPI-based scaffolding for that direction.
+```json
+{
+  "model_name": "meta_logistic",
+  "positive_label": "3-4",
+  "negative_label": "1-2",
+  "probability_positive": 0.31,
+  "triage_zone": "GREY",
+  "threshold_out": 0.16,
+  "threshold_in": 0.34
+}
+```
+
+The numeric values above are illustrative. Actual probabilities and thresholds depend on the loaded model artifact and metadata.
+
+## Training
+
+The current training entrypoint is:
+
+```bash
+python scripts/train_meta_logistic.py
+```
+
+The script trains the current calibrated logistic model candidate, writes model artifacts to `models/`, and writes reports/plots to `reports/`.
+
+Important notes:
+
+- Training requires local private medical datasets.
+- Those datasets are not included in the public repository.
+- A clean public clone may be able to run inference if model artifacts are present, but it should not be expected to reproduce training without access to the private data files.
+- Paths and model metadata should be reviewed before running new experiments.
+
+## Testing and Linting
+
+Run automated tests:
+
+```bash
+pytest
+```
+
+Run linting:
+
+```bash
+ruff check src tests scripts
+```
+
+These checks cover the API, scoring logic, and web interface behavior.
+
+## Data Availability
+
+Patient-level medical data used for model development is private and cannot be published in this repository.
+
+For that reason:
+
+- raw clinical data is not public,
+- processed patient datasets are not public,
+- training data is not distributed with the repository,
+- reproducibility from raw data is limited for external users.
+
+The repository is structured so that application code, model-serving logic, metadata, tests, and documentation can be reviewed without exposing private patient records.
 
 ## Limitations
 
-- This is not a certified medical device.
-- I cannot publish the medical dataset used for training and evaluation.
+- This is a research-stage project, not a clinically validated product.
+- The model is not a certified medical device.
+- Reported metrics come from thesis-stage or local experimental evaluation.
 - External validation is limited.
-- Some code in `legacy/` still reflects exploratory research work.
-- Results on the small control group should be interpreted cautiously.
+- Data availability is restricted because the source dataset contains private medical information.
+- Model behavior depends on the representativeness and quality of the private training data.
+- The grey zone means some cases deliberately remain unresolved by the model.
+- Code in `legacy/` may reflect older exploratory experiments and should not be treated as the current production path.
 
 ## Medical Disclaimer
 
-I treat this repository as a research, educational, and portfolio project. It must not be used as a standalone clinical decision system or as a substitute for physician judgment.
+This project is provided for research, educational, and software engineering portfolio purposes only.
 
-## References
+It must not be used to diagnose, treat, prevent, or rule out disease in real patients. It is not a replacement for physician judgment, specialist hepatology assessment, laboratory interpretation, imaging, elastography, biopsy, or any other clinically approved diagnostic process.
 
-I structured the public version of this repository using common ML project and GitHub documentation patterns:
+The model is not certified, not externally validated for clinical deployment, and not approved as a medical device.
 
-- GitHub repository best practices: https://docs.github.com/en/repositories/creating-and-managing-repositories/best-practices-for-repositories
-- Cookiecutter Data Science: https://cookiecutter-data-science.drivendata.org/
-- DrivenData Cookiecutter Data Science repository: https://github.com/drivendataorg/cookiecutter-data-science
-- FastAPI full-stack template: https://github.com/fastapi/full-stack-fastapi-template
+## Roadmap
+
+Planned or possible next steps:
+
+- improve public documentation of model metadata and inference assumptions,
+- add stronger validation around input ranges and units,
+- add versioned model cards for released artifacts,
+- separate research notebooks and archived experiments more clearly from the serving path,
+- add CI checks for tests, linting, and Docker build,
+- improve calibration and threshold reporting,
+- add external validation if an appropriate dataset becomes available,
+- prepare a safer demo mode using synthetic examples only,
+- document deployment constraints and privacy requirements.
